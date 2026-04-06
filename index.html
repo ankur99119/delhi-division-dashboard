@@ -252,7 +252,7 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
   <div class="hs"><div class="hsi">📅</div><div class="hsn" id="h5">0</div><div class="hsl">Active Days</div><div class="hss">with recorded data</div></div>
 </div>
 <div class="page">
-  <div class="sh"><div class="st">Station Status Map</div><div class="ss-sub">Green=Inspected Clear | Yellow=Inspected+Incident | Red=Not Inspected | Grey=No Data | Click any station for full details</div></div>
+  <div class="sh"><div class="st">Station Status Map</div><div class="ss-sub">🟡 Yellow = Not yet inspected this month &nbsp;·&nbsp; 🟢 Green = Inspected ✓ &nbsp;·&nbsp; Click any station for details</div></div>
   <div class="map-grid" id="mapGrid"></div>
   <div class="sh"><div class="st">TI Performance Scorecard</div><div class="ss-sub">Points earned — Inspections + Counselling + Bonus − Deductions · Highest points = Rank 1</div><span class="sbdg ba" id="kpi-badge">All Months</span></div>
   <div class="kpi-grid" id="kpiGrid"></div>
@@ -268,8 +268,8 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
       <div class="ilh">
         <div class="ifbtns">
           <button class="ifb on" onclick="fInc('all',this)">All</button>
-          <button class="ifb" onclick="fInc('Open',this)">Open</button>
-          <button class="ifb" onclick="fInc('Closed',this)">Closed</button>
+          
+          
           <button class="ifb" onclick="fInc('Derailment',this)">Derailment</button>
           <button class="ifb" onclick="fInc('All Right Signal Exchange',this)">AR Signal</button>
           <button class="ifb" onclick="fInc('Wrong Routing',this)">Wrong Route</button>
@@ -406,7 +406,7 @@ function ld(p,t){document.getElementById("ldf").style.width=p+"%";document.getEl
 async function fg(url){const r=await fetch(url);const t=await r.text();return JSON.parse(t.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);?\s*$/)[1]);}
 function ps(j,f){if(!j||!j.table||!j.table.rows)return[];return j.table.rows.map(row=>{const o={};f.forEach((k,i)=>{const c=row.c&&row.c[i];o[k]=c?(c.f!==undefined&&c.f!==null?c.f:(c.v!==undefined&&c.v!==null?c.v:'')):''});return o;});}
 function mf(a){return CM==="all"?a:a.filter(r=>r.month===CM)}
-function st(s){const si=mf(ID).filter(i=>i.station===s);const oi=mf(IC).filter(i=>i.station===s&&String(i.status).trim()==="Open");if(!si.length&&!oi.length)return"grey";if(!si.length)return"red";if(oi.length)return"yellow";return"green";}
+function st(s){return mf(ID).filter(i=>i.station===s).length?"green":"yellow";}
 function ra(){rHero();rMap();rKPI();rCharts();rInc();rCoun();rTrend();}
 function rHero(){
   const fi=mf(ID),fc=mf(IC),fc2=mf(CO);
@@ -415,9 +415,9 @@ function rHero(){
   const cl=fc.filter(i=>String(i.status).trim()==="Closed").length;
   const cn=fc2.length;
   const days=new Set([...fi.map(i=>i.date),...fc.map(i=>i.date),...fc2.map(i=>i.date)].filter(Boolean)).size;
-  an("h1",ins);an("h2",fi.length);an("h3",oi);an("h4",cn);an("h5",days);
+  an("h1",ins);an("h2",fi.length);an("h3",fc.length);an("h4",cn);an("h5",days);
   document.getElementById("h1s").textContent=CM==="all"?"all time":CM;
-  document.getElementById("h3s").textContent=cl>0?cl+" closed":"all open";
+  document.getElementById("h3s").textContent=oi+" open · "+cl+" closed";
   document.getElementById("inc-badge").textContent=oi+" Open";
   document.getElementById("coun-badge").textContent=cn+" records";
   document.getElementById("kpi-badge").textContent=CM==="all"?"All Months":CM;
@@ -426,12 +426,16 @@ function an(id,target){const el=document.getElementById(id);if(!el)return;const 
 function rMap(){
   let h="";
   SECS.forEach(sec=>{
-    let sg=0,sy=0,sr=0;
-    sec.stns.forEach(s=>{const x=st(s);if(x==="green")sg++;else if(x==="yellow")sy++;else if(x==="red")sr++;});
+    let sg=0;
+    sec.stns.forEach(s=>{if(st(s)==="green")sg++;});
     h+='<div class="scard"><div class="sc-hdr"><div><div class="sc-code">TI/'+sec.code+'</div><div class="sc-nm">'+sec.name+' - '+sec.stns.length+' stns</div></div>';
-    h+='<div class="sc-meta"><div class="smd" style="background:var(--jade)"></div><span class="smc" style="color:var(--jade)">'+sg+'</span>';
-    h+='<div class="smd" style="background:var(--amber);margin-left:5px"></div><span class="smc" style="color:var(--amber)">'+sy+'</span>';
-    h+='<div class="smd" style="background:var(--ruby);margin-left:5px"></div><span class="smc" style="color:var(--ruby)">'+sr+'</span></div></div>';
+    var pendingCount=sec.stns.length-sg;
+    h+='<div class="sc-meta">'+
+      '<span style="font-size:10px;font-weight:700;color:#1a7a34">'+sg+'</span>'+
+      '<span style="font-size:9px;color:#aab0b8"> insp / </span>'+
+      '<span style="font-size:10px;font-weight:700;color:#8a6800">'+pendingCount+'</span>'+
+      '<span style="font-size:9px;color:#aab0b8"> pending</span>'+
+    '</div></div>';
     h+='<div class="sc-tiles">';
     sec.stns.forEach(s=>{
       const x=st(s);
@@ -518,7 +522,7 @@ function rCharts(){
 }
 function rInc(){
   const data=mf(IC);
-  document.getElementById("inc-badge").textContent=data.filter(i=>String(i.status).trim()==="Open").length+" Open";
+  document.getElementById("inc-badge").textContent=data.length+" incidents";
   const tc={};data.forEach(i=>{if(i.type)tc[i.type]=(tc[i.type]||0)+1;});
   document.getElementById("incTypes").innerHTML=Object.entries(tc).sort((a,b)=>b[1]-a[1]).map(function(e){const tp=e[0],cnt=e[1];return '<div class="itr" onclick="fInc(\''+tp+'\',null)"><div class="itr-ic">'+tp.slice(0,4)+'</div><div class="itr-nm">'+tp+'</div><div class="itr-ct" style="background:rgba(255,61,90,.15);color:var(--ruby)">'+cnt+'</div></div>';}).join("")||'<div class="nd">No incidents yet</div>';
   rIncList();
@@ -598,7 +602,7 @@ function cStn(stn){
   let b="";
   b+='<div class="psl">Inspections ('+si.length+')</div>';
   b+=si.length?si.map(i=>'<div class="pe"><div class="ped">'+(i.date||"--")+" - "+(i.month||"--")+'</div><div class="pet i">'+(i.type||"--")+'</div><div class="peti">'+(i.tiName||i.tiCode||"--")+'</div>'+(i.remarks?'<div class="per">'+i.remarks+'</div>':"")+'</div>').join(""):'<div class="pempty">No inspections recorded</div>';
-  b+='<div class="psl">Incidents ('+ci.length+') - '+oi.length+' Open</div>';
+  b+='<div class="psl">Incidents ('+ci.length+')</div>';
   b+=ci.length?ci.map(i=>'<div class="pe"><div class="ped">'+(i.date||"--")+" - "+(i.month||"--")+'<span class="pst '+(String(i.status).trim()==="Open"?"pso":"psc")+'">'+(i.status||"Open")+'</span></div><div class="pet n">'+(i.type||"--")+'</div>'+(i.sm?'<div class="per" style="color:var(--mist)">SM: '+i.sm+'</div>':"")+(i.desc?'<div class="per">'+i.desc+'</div>':"")+(i.action?'<div class="per" style="color:var(--steel)">Action: '+i.action+'</div>':"")+'</div>').join(""):'<div class="pempty">No incidents recorded</div>';
   if(cc.length){b+='<div class="psl">Counselling at this Station ('+cc.length+')</div>';b+=cc.map(c=>'<div class="pe"><div class="ped">'+(c.date||"--")+" - "+(c.month||"--")+'</div><div class="pet c">Staff Counselling</div><div class="peti">'+(c.staffName||"--")+" - "+(c.desig||"")+'</div>'+(c.reason?'<div class="per">Reason: '+c.reason+'</div>':"")+(c.outcome?'<div class="per">Outcome: '+c.outcome+'</div>':"")+'</div>').join("");}
   document.getElementById("pbody").innerHTML=b;
