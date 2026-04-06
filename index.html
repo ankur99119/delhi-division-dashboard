@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delhi Division — TI Station Intelligence Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#001f3f;--blue:#0057a8;--orange:#e05c00;--gold:#f0a500;
+  --green:#1a7a3c;--red:#b03020;--yellow:#c49a00;
+  --bg:#000d1a;--panel:#001428;--border:rgba(0,87,168,0.3);
+  --green-bg:rgba(26,122,60,0.15);--red-bg:rgba(176,48,32,0.15);
+  --yellow-bg:rgba(196,154,0,0.15);--grey-bg:rgba(74,85,104,0.12);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:#e0e8f0;min-height:100vh;overflow-x:hidden}
+
+/* ── HEADER ── */
+.hdr{background:linear-gradient(135deg,#001428 0%,#002050 50%,#001428 100%);
+  border-bottom:2px solid var(--orange);padding:0 20px;display:flex;
+  align-items:center;justify-content:space-between;height:62px;
+  position:sticky;top:0;z-index:300;box-shadow:0 4px 24px rgba(0,0,0,.7)}
+.hdr-brand{display:flex;align-items:center;gap:14px}
+.hdr-logo{font-family:'Rajdhani',sans-serif;font-size:21px;font-weight:700;
+  color:var(--orange);letter-spacing:2px}
+.hdr-logo span{color:var(--gold)}
+.hdr-sub{font-size:10px;color:#6a8cb0;letter-spacing:1.5px;text-transform:uppercase;margin-top:2px}
+.hdr-divider{width:1px;height:36px;background:var(--border)}
+.hdr-center{display:flex;align-items:center;gap:10px}
+.month-sel{background:rgba(0,87,168,.2);border:1px solid var(--border);
+  color:#e0e8f0;padding:7px 12px;border-radius:4px;
+  font-family:'Barlow',sans-serif;font-size:12px;cursor:pointer}
+.view-btns{display:flex;gap:4px}
+.vbtn{padding:6px 12px;border:1px solid var(--border);background:transparent;
+  color:#6a8cb0;border-radius:3px;font-family:'Rajdhani',sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.vbtn.on{background:var(--orange);color:#fff;border-color:var(--orange)}
+.hdr-right{display:flex;align-items:center;gap:16px}
+.hstats{display:flex;gap:16px}
+.hs{text-align:center;cursor:default}
+.hs-v{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;line-height:1}
+.hs-l{font-size:9px;color:#6a8cb0;text-transform:uppercase;letter-spacing:1px}
+.sync-btn{background:transparent;border:1px solid var(--orange);
+  color:var(--orange);padding:6px 14px;border-radius:4px;
+  font-family:'Rajdhani',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:1px;cursor:pointer;transition:all .2s}
+.sync-btn:hover{background:var(--orange);color:#fff}
+
+/* ── LEGEND ── */
+.legend{background:rgba(0,20,40,.95);border-bottom:1px solid var(--border);
+  padding:7px 20px;display:flex;gap:20px;align-items:center;font-size:10px;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:6px}
+.ld{width:10px;height:10px;border-radius:2px;flex-shrink:0}
+.last-sync{margin-left:auto;font-family:'Share Tech Mono',monospace;
+  font-size:9px;color:#4a6a8a}
+
+/* ── MAIN LAYOUT ── */
+.layout{display:grid;grid-template-columns:1fr 330px;
+  height:calc(100vh - 94px);overflow:hidden}
+
+/* ── MAP PANEL ── */
+.map-panel{overflow-y:auto;padding:16px;border-right:1px solid var(--border)}
+.map-panel::-webkit-scrollbar{width:4px}
+.map-panel::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+
+.sec-wrap{margin-bottom:14px}
+.sec-hdr{display:flex;align-items:center;gap:10px;margin-bottom:8px;
+  padding:7px 12px;background:rgba(0,87,168,.1);
+  border-left:3px solid var(--orange);border-radius:0 4px 4px 0}
+.sec-code{font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;
+  color:var(--gold);letter-spacing:1.5px}
+.sec-name{font-size:10px;color:#6a8cb0}
+.sec-badges{margin-left:auto;display:flex;gap:5px}
+.bdg{font-size:9px;padding:2px 7px;border-radius:2px;font-weight:700;
+  font-family:'Share Tech Mono',monospace}
+.bg{background:var(--green-bg);color:#4cd47c;border:1px solid var(--green)}
+.by{background:var(--yellow-bg);color:#f0c040;border:1px solid var(--yellow)}
+.br{background:var(--red-bg);color:#ff7060;border:1px solid var(--red)}
+
+.sgrid{display:flex;flex-wrap:wrap;gap:5px}
+
+/* STATION TILE */
+.stile{width:60px;height:46px;border-radius:5px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;cursor:pointer;
+  transition:transform .12s,box-shadow .12s,outline .1s;
+  border:1px solid transparent;position:relative;
+  font-family:'Share Tech Mono',monospace}
+.stile:hover{transform:scale(1.1);z-index:20;box-shadow:0 5px 18px rgba(0,0,0,.6)}
+.stile.selected{outline:2px solid var(--gold);outline-offset:2px;z-index:10}
+.stile.green{background:var(--green-bg);border-color:var(--green)}
+.stile.yellow{background:var(--yellow-bg);border-color:var(--yellow)}
+.stile.red{background:var(--red-bg);border-color:var(--red)}
+.stile.grey{background:var(--grey-bg);border-color:rgba(74,85,104,.3)}
+.sc{font-size:11px;font-weight:700;letter-spacing:.3px}
+.stile.green .sc{color:#4cd47c}
+.stile.yellow .sc{color:#f0c040}
+.stile.red .sc{color:#ff7060}
+.stile.grey .sc{color:#6a8cb0}
+.sdot{width:5px;height:5px;border-radius:50%;margin-top:2px}
+.stile.green  .sdot{background:#4cd47c;box-shadow:0 0 5px #4cd47c}
+.stile.yellow .sdot{background:#f0c040;box-shadow:0 0 5px #f0c040}
+.stile.red    .sdot{background:#ff7060;box-shadow:0 0 5px #ff7060;animation:pulse 2s ease infinite}
+.stile.grey   .sdot{background:#4a5568}
+.icnt{position:absolute;top:2px;right:3px;font-size:8px;
+  color:#ff7060;font-weight:700;font-family:'Barlow',sans-serif}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── SIDEBAR ── */
+.sidebar{display:flex;flex-direction:column;background:var(--panel);overflow:hidden}
+.tabs{display:flex;border-bottom:1px solid var(--border)}
+.tb{flex:1;padding:10px 2px;background:transparent;border:none;color:#6a8cb0;
+  font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all .2s}
+.tb.on{color:var(--orange);border-bottom-color:var(--orange);background:rgba(224,92,0,.04)}
+
+.tc{display:none;flex:1;overflow-y:auto;padding:14px}
+.tc.on{display:block}
+.tc::-webkit-scrollbar{width:3px}
+.tc::-webkit-scrollbar-thumb{background:var(--border)}
+
+/* Station detail */
+.prompt{height:200px;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;color:#4a5568;gap:8px;text-align:center}
+.p-ic{font-size:34px}
+.p-h{font-family:'Rajdhani',sans-serif;font-size:14px;letter-spacing:1px;color:#6a8cb0}
+.p-s{font-size:11px;line-height:1.6}
+
+.sdhdr{background:rgba(0,87,168,.12);border:1px solid var(--border);
+  border-radius:6px;padding:12px;margin-bottom:12px}
+.sdc{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;
+  color:var(--gold);line-height:1}
+.sdsec{font-size:10px;color:#6a8cb0;margin-top:2px}
+.sdti{font-size:12px;color:var(--orange);font-weight:600;margin-top:4px}
+.pill{display:inline-block;padding:3px 10px;border-radius:12px;font-size:9px;
+  font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:6px}
+.pg{background:var(--green-bg);color:#4cd47c;border:1px solid var(--green)}
+.py{background:var(--yellow-bg);color:#f0c040;border:1px solid var(--yellow)}
+.pr{background:var(--red-bg);color:#ff7060;border:1px solid var(--red)}
+.pgr{background:var(--grey-bg);color:#6a8cb0;border:1px solid #4a5568}
+
+.slbl{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:#6a8cb0;
+  margin:12px 0 6px;padding-bottom:3px;border-bottom:1px solid var(--border)}
+
+.ecard{background:rgba(255,255,255,.025);border:1px solid var(--border);
+  border-radius:4px;padding:10px;margin-bottom:8px;font-size:11px;
+  transition:background .15s}
+.ecard:hover{background:rgba(0,87,168,.08)}
+.edate{font-family:'Share Tech Mono',monospace;font-size:9px;color:var(--gold);margin-bottom:3px}
+.etype{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.etype.ins{color:#4cd47c}.etype.inc{color:#ff7060}
+.eti{color:var(--orange);font-size:10px;font-weight:600}
+.erm{color:#9ab0c8;font-size:10px;margin-top:3px;line-height:1.5}
+.sbdg{display:inline-block;padding:1px 6px;border-radius:2px;font-size:8px;
+  font-weight:700;letter-spacing:1px;float:right}
+.so{background:var(--red-bg);color:#ff7060;border:1px solid var(--red)}
+.sc2{background:var(--green-bg);color:#4cd47c;border:1px solid var(--green)}
+.nodata{text-align:center;padding:24px 0;color:#4a5568}
+.ndi{font-size:28px;margin-bottom:6px}
+
+/* KPI */
+.kpi-card{background:rgba(255,255,255,.025);border:1px solid var(--border);
+  border-radius:5px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .15s}
+.kpi-card:hover{background:rgba(0,87,168,.1);border-color:rgba(0,87,168,.5)}
+.kc-top{display:flex;justify-content:space-between;align-items:flex-start}
+.kc-left{flex:1}
+.kc-ti{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;color:var(--gold)}
+.kc-name{font-size:10px;color:#9ab0c8;margin-top:1px}
+.kc-score{font-family:'Share Tech Mono',monospace;font-size:20px;font-weight:700;line-height:1}
+.kc-bar{height:4px;background:rgba(255,255,255,.06);border-radius:2px;margin-top:8px;overflow:hidden}
+.kc-fill{height:100%;border-radius:2px;transition:width 1s ease}
+.kc-detail{display:none;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)}
+.kc-detail.open{display:block}
+.kd-row{display:flex;justify-content:space-between;padding:3px 0;font-size:10px;
+  border-bottom:1px solid rgba(255,255,255,.03)}
+.kd-row:last-child{border:none}
+.kd-n{color:#9ab0c8}
+.kd-v{font-family:'Share Tech Mono',monospace;font-weight:700}
+.kc-incidents{font-size:10px;color:#ff7060;margin-top:4px}
+
+/* Incidents */
+.iflts{display:flex;gap:5px;margin-bottom:10px;flex-wrap:wrap}
+.ifb{padding:3px 9px;border-radius:3px;border:1px solid var(--border);
+  background:transparent;color:#6a8cb0;font-size:9px;font-weight:700;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.ifb.on{background:var(--orange);color:#fff;border-color:var(--orange)}
+.irow{background:rgba(255,255,255,.02);border:1px solid var(--border);
+  border-left:3px solid var(--red);border-radius:4px;padding:9px 11px;
+  margin-bottom:7px;cursor:pointer;transition:background .15s}
+.irow:hover{background:rgba(176,48,32,.08)}
+.irow.closed{border-left-color:var(--green)}
+.ir-t{display:flex;justify-content:space-between;align-items:flex-start}
+.ir-st{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:700;color:var(--gold)}
+.ir-tp{font-size:9px;color:#ff7060;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.ir-dt{font-family:'Share Tech Mono',monospace;font-size:9px;color:#6a8cb0}
+.ir-ds{font-size:10px;color:#9ab0c8;margin-top:3px;line-height:1.4}
+
+/* Stats */
+.sblk{background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:5px;padding:11px;margin-bottom:9px}
+.sbtl{font-family:'Rajdhani',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:#6a8cb0;margin-bottom:7px}
+.sr{display:flex;justify-content:space-between;align-items:center;
+  padding:4px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:11px}
+.sr:last-child{border:none}
+.sn{color:#9ab0c8}.sv{font-family:'Share Tech Mono',monospace;font-weight:700}
+.sv.g{color:#4cd47c}.sv.r{color:#ff7060}.sv.o{color:var(--orange)}
+.pb-bg{background:rgba(255,255,255,.05);border-radius:2px;height:4px;
+  overflow:hidden;margin-top:2px}
+.pb-f{height:100%;border-radius:2px;transition:width .8s}
+
+/* Loading */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:220px;gap:10px;color:#6a8cb0}
+.spin{width:30px;height:30px;border:2px solid var(--border);
+  border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Error banner */
+.err-banner{background:rgba(176,48,32,.15);border:1px solid var(--red);
+  border-radius:5px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:#ff9080;line-height:1.6}
+.err-banner a{color:var(--gold);text-decoration:none;font-weight:600}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;padding:11px 18px;
+  border-radius:5px;font-size:12px;font-weight:600;opacity:0;
+  transform:translateY(8px);transition:all .3s;z-index:9999;pointer-events:none;
+  background:var(--green);color:#fff}
+.toast.show{opacity:1;transform:none}
+.toast.err{background:var(--red)}
+
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.fi{animation:fi .2s ease}
+
+/* Setup modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;
+  display:flex;align-items:center;justify-content:center}
+.modal{background:var(--panel);border:1px solid var(--border);border-top:3px solid var(--orange);
+  border-radius:8px;padding:28px;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto}
+.modal h2{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;
+  color:var(--gold);margin-bottom:16px;letter-spacing:1px}
+.modal p{font-size:12px;color:#9ab0c8;line-height:1.7;margin-bottom:10px}
+.modal ol{padding-left:18px;font-size:12px;color:#9ab0c8;line-height:1.9;margin-bottom:12px}
+.modal code{background:rgba(0,87,168,.2);border:1px solid var(--border);
+  border-radius:3px;padding:2px 7px;font-family:'Share Tech Mono',monospace;
+  font-size:11px;color:var(--gold);word-break:break-all}
+.modal input{width:100%;background:rgba(0,87,168,.1);border:1px solid var(--border);
+  border-radius:4px;color:#e0e8f0;padding:9px 12px;font-family:'Barlow',sans-serif;
+  font-size:12px;margin-bottom:8px}
+.modal input:focus{outline:none;border-color:var(--orange)}
+.mbtn{padding:9px 20px;border-radius:4px;border:none;font-family:'Rajdhani',sans-serif;
+  font-size:13px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .2s}
+.mbtn-p{background:var(--orange);color:#fff;width:100%;margin-top:4px}
+.mbtn-p:hover{background:#ff6b10}
+.mbtn-s{background:transparent;border:1px solid var(--border);color:#6a8cb0;font-size:11px;margin-top:6px;width:100%}
+.step{display:flex;gap:10px;margin-bottom:8px;font-size:12px;color:#9ab0c8;line-height:1.6}
+.step-n{width:22px;height:22px;border-radius:50%;background:var(--orange);color:#fff;
+  font-weight:700;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+</style>
+</head>
+<body>
+
+<!-- SETUP MODAL -->
+<div class="modal-overlay" id="setupModal" style="display:none">
+  <div class="modal">
+    <h2>🚆 First-Time Setup</h2>
+    <p>This dashboard reads live data from your Google Sheet. Complete setup once.</p>
+
+    <div class="step"><div class="step-n">1</div><div>Open your Google Sheet → <b>Extensions → Apps Script</b> → paste the <code>AppsScript.gs</code> file → Save → Run <code>setupAll()</code></div></div>
+    <div class="step"><div class="step-n">2</div><div>Make sheet public: <b>Share → Anyone with link → Viewer → Done</b></div></div>
+    <div class="step"><div class="step-n">3</div><div>Deploy as Web App: <b>Deploy → New Deployment → Web App → Execute as: Me → Anyone → Deploy</b> → Copy URL</div></div>
+    <div class="step"><div class="step-n">4</div><div>Paste your Web App URL below (needed to save data from dashboard):</div></div>
+
+    <input type="text" id="setup-url" placeholder="https://script.google.com/macros/s/YOUR_ID/exec">
+    <p style="font-size:10px;color:#4a6a8a;margin-top:-4px">Skip this if you only want to view data (not enter from dashboard)</p>
+
+    <button class="mbtn mbtn-p" onclick="saveSetup()">✓ Save & Start Dashboard</button>
+    <button class="mbtn mbtn-s" onclick="skipSetup()">Skip — View Only Mode</button>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-brand">
+    <div>
+      <div class="hdr-logo">🚆 DELHI <span>DIV</span></div>
+      <div class="hdr-sub">Station Intelligence Dashboard · FY 2025-26</div>
+    </div>
+    <div class="hdr-divider"></div>
+    <div class="hdr-center">
+      <select class="month-sel" id="monthSel" onchange="onMonthChange()">
+        <option value="all">All Months</option>
+        <option value="Apr-26">April 2026</option><option value="May-26">May 2026</option>
+        <option value="Jun-26">June 2026</option><option value="Jul-26">July 2026</option>
+        <option value="Aug-26">August 2026</option><option value="Sep-26">September 2026</option>
+        <option value="Oct-26">October 2026</option><option value="Nov-26">November 2026</option>
+        <option value="Dec-26">December 2026</option><option value="Jan-27">January 2027</option>
+        <option value="Feb-27">February 2027</option><option value="Mar-27">March 2027</option>
+      </select>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="hstats">
+      <div class="hs"><div class="hs-v" id="hs-g" style="color:#4cd47c">—</div><div class="hs-l">Inspected</div></div>
+      <div class="hs"><div class="hs-v" id="hs-y" style="color:#f0c040">—</div><div class="hs-l">Incident</div></div>
+      <div class="hs"><div class="hs-v" id="hs-r" style="color:#ff7060">—</div><div class="hs-l">Pending</div></div>
+      <div class="hs"><div class="hs-v" id="hs-t" style="color:var(--gold)">160</div><div class="hs-l">Total</div></div>
+    </div>
+    <button class="sync-btn" id="syncBtn" onclick="loadData()">⟳ Sync</button>
+  </div>
+</header>
+
+<div class="legend">
+  <div class="li"><div class="ld" style="background:var(--green);box-shadow:0 0 5px var(--green)"></div>Inspected — No incident</div>
+  <div class="li"><div class="ld" style="background:var(--yellow);box-shadow:0 0 5px var(--yellow)"></div>Inspected — Open incident</div>
+  <div class="li"><div class="ld" style="background:var(--red);box-shadow:0 0 5px var(--red)"></div>Not inspected this month</div>
+  <div class="li"><div class="ld" style="background:#4a5568"></div>No data</div>
+  <div class="last-sync" id="lastSync">Not synced yet — click ⟳ Sync</div>
+</div>
+
+<div class="layout">
+  <!-- MAP -->
+  <div class="map-panel" id="mapPanel">
+    <div class="loading"><div class="spin"></div><div>Loading station data...</div></div>
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="tabs">
+      <button class="tb on" onclick="showTab('detail')">📍 Station</button>
+      <button class="tb"    onclick="showTab('kpi')">📊 KPI</button>
+      <button class="tb"    onclick="showTab('inc')">⚠️ Incidents</button>
+      <button class="tb"    onclick="showTab('stats')">🔢 Stats</button>
+    </div>
+
+    <!-- STATION DETAIL -->
+    <div class="tc on" id="tc-detail">
+      <div class="prompt" id="prompt">
+        <div class="p-ic">🗺️</div>
+        <div class="p-h">Click any station</div>
+        <div class="p-s">Click a coloured tile to see its inspection history, incidents, and full details.</div>
+      </div>
+      <div id="sd" style="display:none"></div>
+    </div>
+
+    <!-- KPI SCORES -->
+    <div class="tc" id="tc-kpi">
+      <div id="kpi-div"><div class="loading"><div class="spin"></div><div>Loading KPI data...</div></div></div>
+    </div>
+
+    <!-- INCIDENTS -->
+    <div class="tc" id="tc-inc">
+      <div class="iflts">
+        <button class="ifb on" onclick="fInc('all',this)">All</button>
+        <button class="ifb" onclick="fInc('Open',this)">Open</button>
+        <button class="ifb" onclick="fInc('Closed',this)">Closed</button>
+        <button class="ifb" onclick="fInc('Derailment',this)">Derailment</button>
+        <button class="ifb" onclick="fInc('All Right Signal Exchange',this)">AR Signal</button>
+        <button class="ifb" onclick="fInc('Wrong Routing',this)">Wrong Route</button>
+      </div>
+      <div id="inc-list"></div>
+    </div>
+
+    <!-- STATS -->
+    <div class="tc" id="tc-stats">
+      <div id="stats-div"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════════════
+const SHEET_ID = "1AagjNBgNdMQ9e_lMDaX2J3K-3N15JIqg6S3tXwUW-zI";
+
+const SECTIONS = [
+  {code:"FDB",  name:"Hemaraj",         stns:["OKA","TKD","JNC","FDB","FDN","BVH","PYLA","AST","PWL"]},
+  {code:"DLI",  name:"Ashutosh Thakur", stns:["DLI","GZB","DKZ","SZM","DSA","DSA(A&B)","SBB","ANVT","CYZ","GUH","MUD","MDNR","NO","MUZ"]},
+  {code:"MUT",  name:"Sudheer Kanojia", stns:["PRTP","MTC","MUT","PQY","DRLA","SKF","KAT","MSP","JDW","MOZ","BMHR","RNA","DBD","THJ","NGL"]},
+  {code:"SMQL", name:"S.K. Dhiman",     stns:["KEX","BPM","BTU","KPKI","KQL","SMQL","HID","THBN","NNX","RPMN","MNZ","TPZ"]},
+  {code:"NDLS", name:"Ashutosh Jha",    stns:["NDLS","HNZM","TKJ","LPNR","DSJ","BRSQ","PTNR","DBSI","ANDI","SSB","NNO","GHE"]},
+  {code:"ROK",  name:"Balbir Singh",    stns:["BGZ","ASE","SPZ","KRZ","ABO","ROK","SMF","KHV","KZH","JNA","GKG","PLHW","MHRI","JHJ","DGHL","DBHL","MKMN","MAHM","MLKN","GRHI"]},
+  {code:"JHI",  name:"Jaipraksh",       stns:["JJT","KIU","BSPH","JHI","BZO","UCA","GSO","NRW","DHY","DTN","KIY","KLE","JCY","PHWR"]},
+  {code:"JHL",  name:"Rajiv Ranjan",    stns:["TUN","HMQ","JHL","BRZ","BLZ","NPX","MSZ","SSZ","MAUR","MASK","KTF","KZW","KZW(C)"]},
+  {code:"SNP",  name:"Shriram Meena",   stns:["BHD","HUK","NUR","RDDE","SNP","SLKN","RUG","GNU","BDMJ","SMK","MOHR"]},
+  {code:"KKDE", name:"Ravinder Rana",   stns:["GRA","BZJT","KUN","BZK","TRR","NLKR","AMN","KKDE","DHKR","DPP","DHZM","SHDM","MOY"]},
+  {code:"PNP",  name:"Anoop Kumar",     stns:["DWNA","PNP","BBDE","BHMW","BHUL","KURN","MLDE","SFDE","PKDE","NLH","MDLA","GHNA","PPDE"]},
+  {code:"DEC",  name:"Kailash Babu",    stns:["DEE","DEC","PM","BWSN","GGN","GHH","PT","JSKA","PTRD","IHP","KIP","FN","MNAR"]},
+];
+const stnMap = {};
+SECTIONS.forEach(s => s.stns.forEach(st => stnMap[st] = s));
+
+// State
+let inspData=[], incData=[], curMonth='all', selStn=null, incFilter='all';
+
+// ═══════════════════════════════════════════════════
+// SETUP
+// ═══════════════════════════════════════════════════
+function checkSetup() {
+  const url = localStorage.getItem('dd_script_url');
+  // Always load — show setup only if first time
+  if (!localStorage.getItem('dd_setup_done')) {
+    document.getElementById('setupModal').style.display = 'flex';
+  } else {
+    loadData();
+  }
+}
+
+function saveSetup() {
+  const url = document.getElementById('setup-url').value.trim();
+  if (url) localStorage.setItem('dd_script_url', url);
+  localStorage.setItem('dd_setup_done', '1');
+  document.getElementById('setupModal').style.display = 'none';
+  loadData();
+}
+
+function skipSetup() {
+  localStorage.setItem('dd_setup_done', '1');
+  document.getElementById('setupModal').style.display = 'none';
+  loadData();
+}
+
+// ═══════════════════════════════════════════════════
+// DATA LOADING FROM GOOGLE SHEETS
+// ═══════════════════════════════════════════════════
+async function loadData() {
+  const btn = document.getElementById('syncBtn');
+  btn.textContent = '⟳ Loading...'; btn.style.opacity = '.6';
+
+  try {
+    const base = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
+    const [r1, r2] = await Promise.all([
+      fetchGSheet(base + 'INSPECTIONS'),
+      fetchGSheet(base + 'INCIDENTS')
+    ]);
+
+    inspData = parseGSheet(r1, ['_num','station','date','month','tiCode','tiName','type','remarks'])
+                 .filter(r => r.station && r.station !== 'Station' && r.station !== '#');
+    incData  = parseGSheet(r2, ['_num','station','date','month','type','sm','desc','action','status','tiSec'])
+                 .filter(r => r.station && r.station !== 'Station' && r.station !== '#');
+
+    document.getElementById('lastSync').textContent =
+      '✓ Synced at ' + new Date().toLocaleTimeString('en-IN');
+    showToast('✓ Data synced from Google Sheet');
+  } catch(e) {
+    console.warn('Sheet fetch failed:', e.message);
+    document.getElementById('lastSync').textContent = '⚠️ Could not load — check sheet is public';
+    // Use cached data if available
+    const cached = localStorage.getItem('dd_cache');
+    if (cached) {
+      const c = JSON.parse(cached);
+      inspData = c.insp || []; incData = c.inc || [];
+      document.getElementById('lastSync').textContent = '⚠️ Using cached data from ' + (c.time||'earlier');
+    }
+  }
+
+  // Cache for offline
+  localStorage.setItem('dd_cache', JSON.stringify({
+    insp: inspData, inc: incData, time: new Date().toLocaleTimeString('en-IN')
+  }));
+
+  renderMap(); renderKPI(); renderIncList(); renderStats();
+  if (selStn) renderSD(selStn);
+  btn.textContent = '⟳ Sync'; btn.style.opacity = '1';
+}
+
+async function fetchGSheet(url) {
+  const r = await fetch(url);
+  const t = await r.text();
+  return JSON.parse(t.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/)[1]);
+}
+
+function parseGSheet(json, fields) {
+  if (!json?.table?.rows) return [];
+  return json.table.rows.map(row => {
+    const obj = {};
+    fields.forEach((f, i) => {
+      const cell = row.c?.[i];
+      obj[f] = cell ? (cell.f ?? cell.v ?? '') : '';
+    });
+    return obj;
+  });
+}
+
+// ═══════════════════════════════════════════════════
+// STATUS LOGIC
+// ═══════════════════════════════════════════════════
+function status(stn) {
+  const mf = curMonth === 'all' ? null : curMonth;
+  const si = inspData.filter(i => i.station===stn && (!mf||i.month===mf));
+  const oi = incData.filter(i => i.station===stn && String(i.status).trim()==='Open' && (!mf||i.month===mf));
+  if (!si.length && !oi.length) return 'grey';
+  if (!si.length) return 'red';
+  if (oi.length) return 'yellow';
+  return 'green';
+}
+
+function openCount(stn) {
+  const mf = curMonth === 'all' ? null : curMonth;
+  return incData.filter(i => i.station===stn && String(i.status).trim()==='Open' && (!mf||i.month===mf)).length;
+}
+
+// ═══════════════════════════════════════════════════
+// RENDER MAP
+// ═══════════════════════════════════════════════════
+function renderMap() {
+  const panel = document.getElementById('mapPanel');
+  let html='', gc=0,yc=0,rc=0;
+
+  SECTIONS.forEach(sec => {
+    let sg=0,sy=0,sr=0;
+    sec.stns.forEach(st => {
+      const s = status(st);
+      if(s==='green')sg++; else if(s==='yellow')sy++; else if(s==='red')sr++;
+    });
+    gc+=sg; yc+=sy; rc+=sr;
+
+    html += `<div class="sec-wrap">
+      <div class="sec-hdr">
+        <div><div class="sec-code">TI / ${sec.code}</div>
+        <div class="sec-name">${sec.name} · ${sec.stns.length} stations</div></div>
+        <div class="sec-badges">
+          <span class="bdg bg">${sg}</span>
+          <span class="bdg by">${sy}</span>
+          <span class="bdg br">${sr}</span>
+        </div>
+      </div>
+      <div class="sgrid">`;
+
+    sec.stns.forEach(st => {
+      const s = status(st);
+      const ic = openCount(st);
+      const sel = selStn===st?' selected':'';
+      html += `<div class="stile ${s}${sel}" onclick="clickStn('${st}')" data-stn="${st}">
+        <span class="sc">${st}</span>
+        <span class="sdot"></span>
+        ${ic>0?`<span class="icnt">${ic}</span>`:''}
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+
+  panel.innerHTML = html;
+  document.getElementById('hs-g').textContent = gc;
+  document.getElementById('hs-y').textContent = yc;
+  const total = SECTIONS.reduce((a,s)=>a+s.stns.length,0);
+  document.getElementById('hs-r').textContent = total-gc-yc;
+}
+
+// ═══════════════════════════════════════════════════
+// CLICK STATION
+// ═══════════════════════════════════════════════════
+function clickStn(stn) {
+  selStn = stn;
+  document.querySelectorAll('.stile').forEach(t=>t.classList.remove('selected'));
+  document.querySelectorAll(`[data-stn="${stn}"]`).forEach(t=>t.classList.add('selected'));
+  showTab('detail');
+  renderSD(stn);
+}
+
+function renderSD(stn) {
+  document.getElementById('prompt').style.display = 'none';
+  const det = document.getElementById('sd');
+  det.style.display = 'block'; det.className = 'fi';
+
+  const sec = stnMap[stn];
+  const s = status(stn);
+  const si = [...inspData].filter(i=>i.station===stn).sort((a,b)=>b.date>a.date?1:-1);
+  const ci = [...incData].filter(i=>i.station===stn).sort((a,b)=>b.date>a.date?1:-1);
+  const oi = ci.filter(i=>String(i.status).trim()==='Open');
+
+  const pc={green:'pg',yellow:'py',red:'pr',grey:'pgr'}[s];
+  const pt={green:'Inspected — Clear',yellow:'Inspected — Incident',red:'Not Inspected',grey:'No Data'}[s];
+
+  let h = `<div class="sdhdr">
+    <div class="sdc">${stn}</div>
+    <div class="sdsec">Delhi Division · Operating Dept</div>
+    <div class="sdti">TI / ${sec?.code||'—'} · ${sec?.name||'—'}</div>
+    <span class="pill ${pc}">${pt}</span>
+  </div>`;
+
+  // Inspections
+  h += `<div class="slbl">🔍 Inspections (${si.length})</div>`;
+  if (!si.length) {
+    h += `<div class="nodata"><div class="ndi">📋</div>No inspections yet</div>`;
+  } else {
+    si.forEach(i => {
+      h += `<div class="ecard">
+        <div class="edate">${i.date||'—'} · ${i.month||'—'}</div>
+        <div class="etype ins">${i.type||'—'}</div>
+        <div class="eti">${i.tiName||i.tiCode||'—'}</div>
+        ${i.remarks?`<div class="erm">${i.remarks}</div>`:''}
+      </div>`;
+    });
+  }
+
+  // Incidents
+  h += `<div class="slbl">⚠️ Incidents (${ci.length}) — ${oi.length} Open</div>`;
+  if (!ci.length) {
+    h += `<div class="nodata"><div class="ndi">✅</div>No incidents recorded</div>`;
+  } else {
+    ci.forEach(i => {
+      h += `<div class="ecard">
+        <div class="edate">${i.date||'—'} · ${i.month||'—'}
+          <span class="sbdg ${String(i.status).trim()==='Open'?'so':'sc2'}">${i.status||'Open'}</span>
+        </div>
+        <div class="etype inc">${i.type||'—'}</div>
+        ${i.sm?`<div style="font-size:9px;color:#6a8cb0">SM: ${i.sm}</div>`:''}
+        ${i.desc?`<div class="erm">${i.desc}</div>`:''}
+        ${i.action?`<div class="erm" style="color:#6a8cb0">Action: ${i.action}</div>`:''}
+      </div>`;
+    });
+  }
+  det.innerHTML = h;
+}
+
+// ═══════════════════════════════════════════════════
+// KPI SCORES
+// ═══════════════════════════════════════════════════
+function renderKPI() {
+  const div = document.getElementById('kpi-div');
+  const mf = curMonth==='all' ? null : curMonth;
+
+  const inspTypes = [
+    {name:'Safety Inspection',         wt:35},
+    {name:'Surprise Inspection',       wt:20, tgt:6},
+    {name:'Night Inspection – Level Crossing', wt:12, tgt:3},
+    {name:'Night Inspection – Station',wt:12, tgt:3},
+    {name:'Night Inspection – Footplate (Goods)',wt:11,tgt:3},
+    {name:'Surprise Road Inspection',  wt:10, tgt:1},
+  ];
+
+  const scores = SECTIONS.map(sec => {
+    const tgt0 = sec.stns.length;
+    const tiInsp = inspData.filter(i => i.tiCode===sec.code && (!mf||i.month===mf));
+    const tiInc  = incData.filter(i => {
+      const s = stnMap[i.station];
+      return s && s.code===sec.code && String(i.status).trim()==='Open' && (!mf||i.month===mf);
+    });
+
+    let ws = 0;
+    const detail = inspTypes.map(it => {
+      const tgt = it.name==='Safety Inspection' ? tgt0 : (it.tgt||1);
+      const done = tiInsp.filter(i=>i.type===it.name).length;
+      const pct = Math.min(Math.round(done/tgt*100), 100);
+      ws += pct * it.wt / 100;
+      return {name:it.name, done, tgt, pct, wt:it.wt};
+    });
+
+    return {code:sec.code, name:sec.name, score:Math.round(ws*10)/10,
+            openInc:tiInc.length, detail};
+  }).sort((a,b)=>b.score-a.score);
+
+  let html = `<div style="font-size:9px;color:#6a8cb0;padding:8px 10px;background:rgba(0,87,168,.08);border-radius:4px;margin-bottom:10px;line-height:1.7">
+    <b style="color:var(--orange)">Showing:</b> Inspection KPI scores${mf?' for '+mf:' (all months)'}<br>
+    <b style="color:#4cd47c">Source:</b> Live from Google Sheets INSPECTIONS tab<br>
+    <span style="color:#6a8cb0">Negative & Bonus: enter in Google Sheet TI_ tabs</span>
+  </div>`;
+
+  scores.forEach((ti, idx) => {
+    const s = ti.score;
+    const col = s>=90?'#4cd47c':s>=70?'#f0c040':'#ff7060';
+    const fill = s>=90?'var(--green)':s>=70?'#c49a00':'var(--red)';
+    const medals = ['🥇','🥈','🥉'];
+    const medal = idx<3 ? medals[idx]+' ' : '';
+
+    html += `<div class="kpi-card" onclick="this.querySelector('.kc-detail').classList.toggle('open')">
+      <div class="kc-top">
+        <div class="kc-left">
+          <div class="kc-ti">${medal}TI/${ti.code} · ${ti.name}</div>
+          <div class="kc-name">${ti.openInc>0?`⚠️ ${ti.openInc} open incident${ti.openInc>1?'s':''}`:''}</div>
+        </div>
+        <div class="kc-score" style="color:${col}">${s}%</div>
+      </div>
+      <div class="kc-bar"><div class="kc-fill" style="width:${Math.min(s,100)}%;background:${fill}"></div></div>
+      <div class="kc-detail">
+        ${ti.detail.map(d=>`
+          <div class="kd-row">
+            <span class="kd-n">${d.name} <span style="color:#4a6a8a">(wt:${d.wt}%)</span></span>
+            <span class="kd-v" style="color:${d.pct>=90?'#4cd47c':d.pct>=70?'#f0c040':'#ff7060'}">${d.done}/${d.tgt} = ${d.pct}%</span>
+          </div>`).join('')}
+        <div class="kd-row" style="margin-top:4px;padding-top:4px;border-top:1px solid var(--border)">
+          <span class="kd-n" style="color:#4a5568">Negative & Bonus scores: enter in Google Sheet</span>
+        </div>
+      </div>
+    </div>`;
+  });
+  div.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════
+// INCIDENTS LIST
+// ═══════════════════════════════════════════════════
+function renderIncList() {
+  const list = document.getElementById('inc-list');
+  let data = [...incData].sort((a,b)=>b.date>a.date?1:-1);
+
+  if (incFilter !== 'all') {
+    if (['Open','Closed'].includes(incFilter)) data = data.filter(i=>String(i.status).trim()===incFilter);
+    else data = data.filter(i=>i.type===incFilter);
+  }
+
+  if (!data.length) {
+    list.innerHTML = `<div class="nodata"><div class="ndi">✅</div>No incidents found</div>`;
+    return;
+  }
+
+  list.innerHTML = data.map(i=>`
+    <div class="irow ${String(i.status||'').toLowerCase()}" onclick="clickStn('${i.station}')">
+      <div class="ir-t">
+        <div><div class="ir-st">${i.station}</div><div class="ir-tp">${i.type||'—'}</div></div>
+        <div style="text-align:right">
+          <div class="ir-dt">${i.date||'—'}</div>
+          <span class="sbdg ${String(i.status).trim()==='Open'?'so':'sc2'}">${i.status||'Open'}</span>
+        </div>
+      </div>
+      ${i.sm?`<div style="font-size:9px;color:#6a8cb0;margin-top:2px">SM: ${i.sm}</div>`:''}
+      ${i.desc?`<div class="ir-ds">${i.desc}</div>`:''}
+    </div>`).join('');
+}
+
+function fInc(f, btn) {
+  incFilter = f;
+  document.querySelectorAll('.ifb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderIncList();
+}
+
+// ═══════════════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════════════
+function renderStats() {
+  const div = document.getElementById('stats-div');
+  const total = SECTIONS.reduce((a,s)=>a+s.stns.length,0);
+  const inspected = new Set(inspData.map(i=>i.station)).size;
+  const openInc = incData.filter(i=>String(i.status).trim()==='Open').length;
+  const closedInc = incData.filter(i=>String(i.status).trim()==='Closed').length;
+  const incTypes = {};
+  incData.forEach(i=>{ incTypes[i.type]=(incTypes[i.type]||0)+1; });
+
+  let html = `
+  <div class="sblk">
+    <div class="sbtl">Division Overview</div>
+    <div class="sr"><span class="sn">Total Stations</span><span class="sv o">${total}</span></div>
+    <div class="sr"><span class="sn">Inspected (any month)</span><span class="sv g">${inspected}</span></div>
+    <div class="sr"><span class="sn">Not Yet Inspected</span><span class="sv r">${total-inspected}</span></div>
+    <div class="sr"><span class="sn">Total Inspection Records</span><span class="sv o">${inspData.length}</span></div>
+    <div class="sr"><span class="sn">Open Incidents</span><span class="sv r">${openInc}</span></div>
+    <div class="sr"><span class="sn">Closed Incidents</span><span class="sv g">${closedInc}</span></div>
+  </div>
+  <div class="sblk">
+    <div class="sbtl">Section Coverage</div>
+    ${SECTIONS.map(sec=>{
+      const done=new Set(inspData.filter(i=>sec.stns.includes(i.station)).map(i=>i.station)).size;
+      const pct=Math.round(done/sec.stns.length*100);
+      const oi=incData.filter(i=>sec.stns.includes(i.station)&&String(i.status).trim()==='Open').length;
+      const col=pct>=80?'var(--green)':pct>=50?'#c49a00':'var(--red)';
+      return `<div class="sr" style="flex-direction:column;align-items:flex-start;gap:2px;padding:5px 0">
+        <div style="display:flex;justify-content:space-between;width:100%">
+          <span class="sn">TI/${sec.code} · ${sec.name}</span>
+          <span class="sv" style="color:${col}">${done}/${sec.stns.length}</span>
+        </div>
+        <div class="pb-bg" style="width:100%"><div class="pb-f" style="width:${pct}%;background:${col}"></div></div>
+        ${oi>0?`<span style="font-size:9px;color:#ff7060">⚠️ ${oi} open incident${oi>1?'s':''}</span>`:''}
+      </div>`;
+    }).join('')}
+  </div>
+  ${Object.keys(incTypes).length?`
+  <div class="sblk">
+    <div class="sbtl">Incident Breakdown</div>
+    ${Object.entries(incTypes).sort((a,b)=>b[1]-a[1]).map(([t,c])=>`
+      <div class="sr"><span class="sn" style="font-size:10px">${t}</span><span class="sv r">${c}</span></div>
+    `).join('')}
+  </div>`:''}`;
+  div.innerHTML = html;
+}
+
+// ═══════════════════════════════════════════════════
+// UI
+// ═══════════════════════════════════════════════════
+function showTab(id) {
+  document.querySelectorAll('.tc').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('tc-'+id).classList.add('on');
+  const idx=['detail','kpi','inc','stats'].indexOf(id);
+  document.querySelectorAll('.tb')[idx]?.classList.add('on');
+  if(id==='inc') renderIncList();
+  if(id==='stats') renderStats();
+  if(id==='kpi') renderKPI();
+}
+
+function onMonthChange() {
+  curMonth = document.getElementById('monthSel').value;
+  renderMap();
+  if(selStn) renderSD(selStn);
+  renderKPI();
+}
+
+function showToast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent=msg; t.className=`toast ${type==='err'?'err':''} show`;
+  setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+checkSetup();
+</script>
+</body>
+</html>
