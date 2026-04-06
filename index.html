@@ -311,7 +311,7 @@ const INSP_PTS={
   "Night Inspection - Footplate (Goods)":4,
   "Surprise Road Inspection":3
 };
-// Counselling: 2 pts per staff counselled
+// Counselling: +2 pts per every 5 staff counselled (floor division)
 // Negative deductions (points):
 const INC_PTS={
   "Derailment":-25,
@@ -341,9 +341,9 @@ function calcPts(tiCode,month){
   mfi.filter(r=>r.tiCode===tiCode).forEach(r=>{
     inspPts+=(INSP_PTS[r.type]||0);
   });
-  // Counselling points (2 per staff)
+  // Counselling points (+2 pts per every 5 staff counselled)
   const coun=mfco.filter(r=>r.tiCode===tiCode).length;
-  const counPts=coun*2;
+  const counPts=Math.floor(coun/5)*2;
   // Bonus points
   let bonusPts=0;
   mfbo.filter(r=>r.tiCode===tiCode).forEach(r=>{
