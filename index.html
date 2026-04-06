@@ -198,7 +198,7 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .clrw{background:rgba(255,179,64,.2);color:var(--amber)}
 .clrx{background:rgba(42,53,80,.5);color:var(--mist)}
 .tg{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;padding:18px;overflow-x:auto;margin-bottom:32px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.tt{width:100%;min-width:860px;border-collapse:collapse}
+.tt{width:100%;min-width:960px;border-collapse:collapse}
 .tt th{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a88;padding:5px 8px;text-align:center;border-bottom:2px solid #dde5f0}
 .tt td{padding:7px 8px;text-align:center;border-bottom:1px solid #edf0f5;font-size:10px}
 .tt tr:hover td{background:#f0f5ff}
@@ -254,7 +254,7 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 <div class="page">
   <div class="sh"><div class="st">Station Status Map</div><div class="ss-sub">Green=Inspected Clear | Yellow=Inspected+Incident | Red=Not Inspected | Grey=No Data | Click any station for full details</div></div>
   <div class="map-grid" id="mapGrid"></div>
-  <div class="sh"><div class="st">TI Performance Scorecard</div><div class="ss-sub">Weighted inspection KPI - click card for breakdown</div><span class="sbdg ba" id="kpi-badge">All Months</span></div>
+  <div class="sh"><div class="st">TI Performance Scorecard</div><div class="ss-sub">Points earned — Inspections + Counselling + Bonus − Deductions · Highest points = Rank 1</div><span class="sbdg ba" id="kpi-badge">All Months</span></div>
   <div class="kpi-grid" id="kpiGrid"></div>
   <div class="sh"><div class="st">Inspection Analysis</div><div class="ss-sub">Coverage and monthly trends across division</div></div>
   <div class="charts-row">
@@ -286,7 +286,7 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
       <div class="cls" id="counLog"></div>
     </div>
   </div>
-  <div class="sh"><div class="st">Month-wise Performance</div><div class="ss-sub">Inspection KPI scores - all 12 TIs - Apr 2026 to Mar 2027</div></div>
+  <div class="sh"><div class="st">Month-wise Points Table</div><div class="ss-sub">Total points earned each month — all 12 TIs — highest total = top rank</div></div>
   <div class="tg"><table class="tt" id="trendTbl"></table></div>
 </div>
 <div class="popup" id="popup">
@@ -301,14 +301,62 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 const SHEET_ID="1AagjNBgNdMQ9e_lMDaX2J3K-3N15JIqg6S3tXwUW-zI";
 const MONTHS=["Apr-26","May-26","Jun-26","Jul-26","Aug-26","Sep-26","Oct-26","Nov-26","Dec-26","Jan-27","Feb-27","Mar-27"];
 const MLBL=["Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar"];
-const INSP_TYPES=[
-  {name:"Safety Inspection",wt:35},
-  {name:"Surprise Inspection",wt:20,tgt:6},
-  {name:"Night Inspection - Level Crossing",wt:12,tgt:3},
-  {name:"Night Inspection - Station",wt:12,tgt:3},
-  {name:"Night Inspection - Footplate (Goods)",wt:11,tgt:3},
-  {name:"Surprise Road Inspection",wt:10,tgt:1}
-];
+// ── SIMPLE POINTS SYSTEM ─────────────────────────────────────
+// Every inspection earns fixed points. Highest total = Rank 1.
+const INSP_PTS={
+  "Safety Inspection":5,
+  "Surprise Inspection":4,
+  "Night Inspection - Level Crossing":4,
+  "Night Inspection - Station":4,
+  "Night Inspection - Footplate (Goods)":4,
+  "Surprise Road Inspection":3
+};
+// Counselling: 2 pts per staff counselled
+// Negative deductions (points):
+const INC_PTS={
+  "Derailment":-25,
+  "All Right Signal Exchange":-3,
+  "Wrong Routing":-3,
+  "Wrong Reception":-3,
+  "Abnormality (found true)":-5,
+  "Wrong Signal Movement by SM":-5,
+  "Incomplete Documentation by SM":-5,
+  "Non-submission Shunting Video":-3,
+  "Wrong Nav-Sanraksha Format":-3
+};
+// Bonus activities:
+const BONUS_PTS={
+  "Video Counselling Session":3,
+  "Correct Nav-Sanraksha Report":3,
+  "Shunting Supervision Video (Full Week)":3,
+  "Good Work by On-Duty Staff":5
+};
+function calcPts(tiCode,month){
+  const mfi=month==="all"?ID:ID.filter(r=>r.month===month);
+  const mfc=month==="all"?IC:IC.filter(r=>r.month===month);
+  const mfco=month==="all"?CO:CO.filter(r=>r.month===month);
+  const mfbo=month==="all"?BO:BO.filter(r=>r.month===month);
+  // Inspection points
+  let inspPts=0;
+  mfi.filter(r=>r.tiCode===tiCode).forEach(r=>{
+    inspPts+=(INSP_PTS[r.type]||0);
+  });
+  // Counselling points (2 per staff)
+  const coun=mfco.filter(r=>r.tiCode===tiCode).length;
+  const counPts=coun*2;
+  // Bonus points
+  let bonusPts=0;
+  mfbo.filter(r=>r.tiCode===tiCode).forEach(r=>{
+    bonusPts+=(BONUS_PTS[r.actType]||0);
+  });
+  // Negative deductions
+  let negPts=0;
+  mfc.filter(r=>{const sec=SM[r.station];return sec&&sec.code===tiCode;}).forEach(r=>{
+    negPts+=(INC_PTS[r.type]||0);
+  });
+  const total=Math.max(0, inspPts+counPts+bonusPts+negPts);
+  return {total,inspPts,counPts,bonusPts,negPts:Math.abs(negPts),coun};
+}
 const INC_ICONS={"All Right Signal Exchange":"Signal","Derailment":"Derail","Wrong Routing":"Route","Wrong Reception":"Recptn","Abnormality (found true)":"Abnrml","Wrong Signal Movement by SM":"WrngSig","Incomplete Documentation by SM":"IncDoc","Non-submission Shunting Video":"ShuntV","Wrong Nav-Sanraksha Format":"NavFmt"};
 const SECS=[
   {code:"FDB",name:"Hemaraj",stns:["OKA","TKD","JNC","FDB","FDN","BVH","PYLA","AST","PWL"]},
@@ -397,21 +445,66 @@ function rMap(){
 }
 function rKPI(){
   const scores=SECS.map(sec=>{
+    const p=calcPts(sec.code,CM);
     const ti=mf(ID).filter(i=>i.tiCode===sec.code);
     const oi=mf(IC).filter(i=>SM[i.station]&&SM[i.station].code===sec.code&&String(i.status).trim()==="Open");
-    const cn=mf(CO).filter(i=>i.tiCode===sec.code).length;
-    let ws=0;
-    INSP_TYPES.forEach(it=>{const tgt=it.name==="Safety Inspection"?sec.stns.length:(it.tgt||1);ws+=Math.min(ti.filter(i=>i.type===it.name).length/tgt*100,100)*it.wt/100;});
-    return{code:sec.code,name:sec.name,sc:sec.stns.length,score:Math.round(ws*10)/10,insp:ti.length,stInsp:new Set(ti.map(i=>i.station)).size,oi:oi.length,cn};
-  }).sort((a,b)=>b.score-a.score);
+    return{
+      code:sec.code,name:sec.name,sc:sec.stns.length,
+      total:p.total,inspPts:p.inspPts,counPts:p.counPts,
+      bonusPts:p.bonusPts,negPts:p.negPts,
+      insp:ti.length,stInsp:new Set(ti.map(i=>i.station)).size,
+      oi:oi.length,cn:p.coun
+    };
+  }).sort((a,b)=>b.total-a.total);
+
+  // Max total for bar scaling
+  const maxPts=Math.max(...scores.map(s=>s.total),1);
+
   document.getElementById("kpiGrid").innerHTML=scores.map((t,i)=>{
-    const s=t.score;
     const rc=i===0?"r1":i===1?"r2":i===2?"r3":"rx";
-    const sc=s>=90?"ex":s>=70?"gd":s>0?"pr":"nd";
-    const bc=s>=90?"var(--jade)":s>=70?"var(--amber)":"var(--ruby)";
-    const stars=s===0?"no data":s>=90?"Excellent":s>=80?"Very Good":s>=70?"Good":s>=60?"Average":"Needs Work";
-    const medal=i===0?"#1 Gold":i===1?"#2 Silver":i===2?"#3 Bronze":"";
-    return '<div class="kc '+rc+'"><div class="kc-rn">#'+(i+1)+'</div><div class="kc-top"><div><div class="kc-sec">TI/'+t.code+'</div><div class="kc-nm">'+t.name+'</div></div><div class="kc-sc '+sc+'">'+(s>0?s+"%":"--")+'</div></div><div class="kc-stars" style="color:var(--amber)">'+stars+(medal?" - "+medal:"")+'</div><div class="kc-bar"><div class="kc-bf" style="width:'+Math.min(s,100)+'%;background:'+bc+'"></div></div><div class="kc-stats"><div class="kcs"><div class="kcv" style="color:var(--jade)">'+t.insp+'</div><div class="kcl">Inspections</div></div><div class="kcs"><div class="kcv" style="color:var(--sapph)">'+t.stInsp+'/'+t.sc+'</div><div class="kcl">Stns Done</div></div><div class="kcs"><div class="kcv" style="color:var(--violet)">'+t.cn+'</div><div class="kcl">Counselled</div></div></div>'+(t.oi>0?'<div class="kc-inc">'+t.oi+' open incident'+(t.oi>1?'s':'')+'</div>':'')+'</div>';
+    const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":"";
+    const rankLabel=i===0?"Rank #1":i===1?"Rank #2":i===2?"Rank #3":"Rank #"+(i+1);
+    // Color by rank not score
+    const ptCol=i===0?"#c47a00":i===1?"#5a7a5a":i===2?"#8a4a00":"var(--sapph)";
+    const barCol=i<3?["#d4920a","#6b8c6b","#a05a10"][i]:"var(--sapph)";
+    const barPct=Math.round(t.total/maxPts*100);
+    return '<div class="kc '+rc+'">'+
+      '<div class="kc-rn">#'+(i+1)+'</div>'+
+      '<div class="kc-top">'+
+        '<div><div class="kc-sec">'+medal+' TI/'+t.code+'</div>'+
+        '<div class="kc-nm">'+t.name+' &nbsp;·&nbsp; '+t.sc+' stations</div></div>'+
+        '<div style="text-align:right">'+
+          '<div style="font-family:Teko,sans-serif;font-size:42px;font-weight:700;line-height:1;color:'+ptCol+'">'+t.total+'</div>'+
+          '<div style="font-size:9px;color:#7a8898;text-transform:uppercase;letter-spacing:1px">points</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="font-size:10px;font-weight:600;color:#8a6600;margin-bottom:8px">'+rankLabel+'</div>'+
+      '<div class="kc-bar"><div class="kc-bf" style="width:'+barPct+'%;background:'+barCol+'"></div></div>'+
+      // Breakdown row
+      '<div class="kc-stats">'+
+        '<div class="kcs">'+
+          '<div class="kcv" style="color:#0a6630">+'+t.inspPts+'</div>'+
+          '<div class="kcl">Insp Pts</div>'+
+        '</div>'+
+        '<div class="kcs">'+
+          '<div class="kcv" style="color:#6b3fd4">+'+t.counPts+'</div>'+
+          '<div class="kcl">Coun Pts</div>'+
+        '</div>'+
+        '<div class="kcs">'+
+          '<div class="kcv" style="color:'+(t.negPts>0?"#aa1428":"#7a8898")+'">-'+t.negPts+'</div>'+
+          '<div class="kcl">Deductions</div>'+
+        '</div>'+
+      '</div>'+
+      // Sub stats
+      '<div style="display:flex;gap:8px;margin-top:8px">'+
+        '<div style="font-size:9px;color:#5a6a88">'+t.insp+' inspections</div>'+
+        '<div style="font-size:9px;color:#5a6a88">·</div>'+
+        '<div style="font-size:9px;color:#5a6a88">'+t.stInsp+'/'+t.sc+' stns</div>'+
+        '<div style="font-size:9px;color:#5a6a88">·</div>'+
+        '<div style="font-size:9px;color:#5a6a88">'+t.cn+' counselled</div>'+
+      '</div>'+
+      (t.oi>0?'<div class="kc-inc">⚠️ '+t.oi+' open incident'+(t.oi>1?'s':'')+'</div>':'')+
+    '</div>';
   }).join("");
 }
 function rCharts(){
@@ -446,11 +539,43 @@ function rCoun(){
   document.getElementById("counLog").innerHTML=sorted.length?sorted.map(c=>'<div class="clr"><div><div class="clrd">'+(c.date||"--")+'</div><div class="clrd" style="color:var(--sapph)">'+(c.month||"")+'</div></div><div><div class="clrs">'+(c.staffName||"--")+'</div><div class="clrds">'+(c.desig||"")+(c.station?" - "+c.station:"")+'</div>'+(c.reason?'<div class="clrds" style="font-style:italic">'+c.reason+'</div>':"")+'</div><div class="clrti">TI/'+(c.tiCode||"--")+'<br><span style="font-size:8px;color:var(--mist)">'+(c.tiName||"")+'</span></div><div class="clro '+(c.outcome==="Counselled"?"clrc":c.outcome==="Warned"?"clrw":"clrx")+'">'+(c.outcome||"--")+'</div></div>').join(""):'<div class="nd">No counselling records yet</div>';
 }
 function rTrend(){
-  let h='<thead><tr><th style="text-align:left;padding-left:14px">SECTION</th><th style="text-align:left;padding-left:14px">TI NAME</th>'+MONTHS.map(m=>'<th>'+m+'</th>').join("")+'<th>ANNUAL</th></tr></thead><tbody>';
+  // Compute all monthly points for colour scaling
+  const allPts=[];
   SECS.forEach(sec=>{
-    const ms=MONTHS.map(m=>{const ti=ID.filter(i=>i.tiCode===sec.code&&i.month===m);let ws=0;INSP_TYPES.forEach(it=>{const tgt=it.name==="Safety Inspection"?sec.stns.length:(it.tgt||1);ws+=Math.min(ti.filter(i=>i.type===it.name).length/tgt*100,100)*it.wt/100;});return Math.round(ws*10)/10;});
-    const ann=ms.filter(s=>s>0).length>0?Math.round(ms.reduce((a,b)=>a+b,0)/12*10)/10:0;
-    h+='<tr><td class="tt-ti">'+sec.code+'</td><td class="tt-nm">'+sec.name+'</td>'+ms.map(s=>'<td><span class="tts '+(s>=90?"ex":s>=70?"gd":s>0?"pr":"nd")+'">'+(s>0?s+"%":"--")+'</span></td>').join("")+'<td><span class="tt-an">'+(ann>0?ann+"%":"--")+'</span></td></tr>';
+    MONTHS.forEach(m=>{allPts.push(calcPts(sec.code,m).total);});
+  });
+  const maxPts=Math.max(...allPts,1);
+
+  let h='<thead><tr>'+
+    '<th style="text-align:left;padding-left:14px">SECTION</th>'+
+    '<th style="text-align:left;padding-left:14px">TI NAME</th>'+
+    MONTHS.map(m=>'<th>'+m+'</th>').join("")+
+    '<th>TOTAL PTS</th><th>RANK</th>'+
+  '</tr></thead><tbody>';
+
+  // Compute annual totals for ranking
+  const annuals=SECS.map(sec=>({code:sec.code,name:sec.name,total:calcPts(sec.code,"all").total}));
+  annuals.sort((a,b)=>b.total-a.total);
+  const rankMap={};annuals.forEach((s,i)=>rankMap[s.code]=i+1);
+
+  SECS.forEach(sec=>{
+    const ms=MONTHS.map(m=>calcPts(sec.code,m).total);
+    const annual=calcPts(sec.code,"all").total;
+    const rank=rankMap[sec.code];
+    const rankStr=rank===1?"🥇 #1":rank===2?"🥈 #2":rank===3?"🥉 #3":"#"+rank;
+    h+='<tr>'+
+      '<td class="tt-ti">'+sec.code+'</td>'+
+      '<td class="tt-nm">'+sec.name+'</td>'+
+      ms.map(pts=>{
+        // colour cell by relative points
+        const rel=pts/maxPts;
+        const bg=pts===0?"#f5f5f5":rel>=0.7?"rgba(10,122,60,.15)":rel>=0.4?"rgba(196,122,0,.12)":"rgba(200,30,58,.1)";
+        const col=pts===0?"#aaa":rel>=0.7?"#0a6630":rel>=0.4?"#8a5500":"#aa1428";
+        return '<td><span class="tts" style="background:'+bg+';color:'+col+'">'+(pts>0?pts+"pts":"--")+'</span></td>';
+      }).join("")+
+      '<td><span class="tt-an">'+annual+' pts</td>'+
+      '<td><b>'+rankStr+'</b></td>'+
+    '</tr>';
   });
   document.getElementById("trendTbl").innerHTML=h+"</tbody>";
 }
