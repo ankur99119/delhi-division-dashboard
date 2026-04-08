@@ -124,7 +124,7 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .kc-stars{font-size:13px;color:var(--amber);margin-bottom:8px}
 .kc-bar{height:5px;background:#dde5f0;border-radius:3px;overflow:hidden;margin-bottom:10px}
 .kc-bf{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
-.kc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px}
+.kc-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px}
 .kcs{background:#f0f4fa;border:1px solid #dde5f0;border-radius:5px;padding:6px 7px;text-align:center}
 .kcv{font-family:'Teko',sans-serif;font-size:18px;font-weight:600;line-height:1}
 .kcl{font-size:8px;color:#7a8898;text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
@@ -468,12 +468,28 @@ function rKPI(){
     const rc=i===0?"r1":i===1?"r2":i===2?"r3":"rx";
     const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":"";
     const rankLabel=i===0?"Rank #1":i===1?"Rank #2":i===2?"Rank #3":"Rank #"+(i+1);
-    // Color by rank not score
     const ptCol=i===0?"#c47a00":i===1?"#5a7a5a":i===2?"#8a4a00":"var(--sapph)";
     const barCol=i<3?["#d4920a","#6b8c6b","#a05a10"][i]:"var(--sapph)";
     const barPct=Math.round(t.total/maxPts*100);
-    return '<div class="kc '+rc+'">'+
+    // Gold / Silver / Bronze card overlay
+    const cardOverlay=i===0?'background:linear-gradient(135deg,rgba(255,200,50,.13),rgba(255,179,0,.05));border-color:rgba(212,160,10,.5);':
+                      i===1?'background:linear-gradient(135deg,rgba(200,200,210,.13),rgba(180,180,200,.05));border-color:rgba(160,160,180,.5);':
+                      i===2?'background:linear-gradient(135deg,rgba(205,130,60,.13),rgba(180,110,40,.05));border-color:rgba(180,110,40,.45);':'';
+    // Gold/silver/bronze medal label colour
+    const medalLblCol=i===0?"#b8860b":i===1?"#708090":i===2?"#8b4513":"#5a6a88";
+    // Equation string: +inspPts +bonusPts +counPts -negPts = total
+    const eqStr='<span style="color:#0a6630;font-weight:700">+'+t.inspPts+'</span>'+
+      '<span style="color:#888;font-size:11px;margin:0 2px"> + </span>'+
+      '<span style="color:#1a7a4a;font-weight:700">+'+t.bonusPts+'</span>'+
+      '<span style="color:#888;font-size:11px;margin:0 2px"> + </span>'+
+      '<span style="color:#6b3fd4;font-weight:700">+'+t.counPts+'</span>'+
+      '<span style="color:#888;font-size:11px;margin:0 2px"> − </span>'+
+      '<span style="color:'+(t.negPts>0?"#aa1428":"#aaa")+';font-weight:700">'+t.negPts+'</span>'+
+      '<span style="color:#888;font-size:11px;margin:0 3px"> = </span>'+
+      '<span style="color:'+ptCol+';font-weight:700;font-size:15px">'+t.total+' pts</span>';
+    return '<div class="kc '+rc+'" style="'+cardOverlay+'">'+
       '<div class="kc-rn">#'+(i+1)+'</div>'+
+      // Header: section code + name | big points
       '<div class="kc-top">'+
         '<div><div class="kc-sec">'+medal+' TI/'+t.code+'</div>'+
         '<div class="kc-nm">'+t.name+' &nbsp;·&nbsp; '+t.sc+' stations</div></div>'+
@@ -482,32 +498,28 @@ function rKPI(){
           '<div style="font-size:9px;color:#7a8898;text-transform:uppercase;letter-spacing:1px">points</div>'+
         '</div>'+
       '</div>'+
-      '<div style="font-size:10px;font-weight:600;color:#8a6600;margin-bottom:8px">'+rankLabel+'</div>'+
+      // Rank label
+      '<div style="font-size:10px;font-weight:700;color:'+medalLblCol+';margin-bottom:6px;letter-spacing:.5px">'+rankLabel+'</div>'+
+      // Progress bar
       '<div class="kc-bar"><div class="kc-bf" style="width:'+barPct+'%;background:'+barCol+'"></div></div>'+
-      // Breakdown row
-      '<div class="kc-stats">'+
-        '<div class="kcs">'+
-          '<div class="kcv" style="color:#0a6630">+'+t.inspPts+'</div>'+
-          '<div class="kcl">Insp Pts</div>'+
-        '</div>'+
-        '<div class="kcs">'+
-          '<div class="kcv" style="color:#6b3fd4">+'+t.counPts+'</div>'+
-          '<div class="kcl">Coun Pts</div>'+
-        '</div>'+
-        '<div class="kcs">'+
-          '<div class="kcv" style="color:'+(t.negPts>0?"#aa1428":"#7a8898")+'">-'+t.negPts+'</div>'+
-          '<div class="kcl">Deductions</div>'+
-        '</div>'+
+      // Equation row — shows how total is built
+      '<div style="background:rgba(0,0,0,.04);border-radius:5px;padding:7px 10px;margin:8px 0 6px;font-family:Teko,sans-serif;font-size:14px;text-align:center">'+eqStr+'</div>'+
+      // Labels row
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:2px;text-align:center;margin-bottom:8px">'+
+        '<div style="font-size:8px;color:#0a6630;text-transform:uppercase;letter-spacing:.5px">Insp</div>'+
+        '<div style="font-size:8px;color:#1a7a4a;text-transform:uppercase;letter-spacing:.5px">Bonus</div>'+
+        '<div style="font-size:8px;color:#6b3fd4;text-transform:uppercase;letter-spacing:.5px">Counselling</div>'+
+        '<div style="font-size:8px;color:'+(t.negPts>0?"#aa1428":"#aaa")+';text-transform:uppercase;letter-spacing:.5px">Deductions</div>'+
       '</div>'+
       // Sub stats
-      '<div style="display:flex;gap:8px;margin-top:8px">'+
-        '<div style="font-size:9px;color:#5a6a88">'+t.insp+' inspections</div>'+
-        '<div style="font-size:9px;color:#5a6a88">·</div>'+
-        '<div style="font-size:9px;color:#5a6a88">'+t.stInsp+'/'+t.sc+' stns</div>'+
-        '<div style="font-size:9px;color:#5a6a88">·</div>'+
-        '<div style="font-size:9px;color:#5a6a88">'+t.cn+' counselled</div>'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid rgba(0,0,0,.06);padding-top:6px">'+
+        '<span style="font-size:9px;color:#5a6a88">📋 '+t.insp+' inspections</span>'+
+        '<span style="font-size:9px;color:#aaa">·</span>'+
+        '<span style="font-size:9px;color:#5a6a88">📍 '+t.stInsp+'/'+t.sc+' stns</span>'+
+        '<span style="font-size:9px;color:#aaa">·</span>'+
+        '<span style="font-size:9px;color:#5a6a88">🧑‍💼 '+t.cn+' counselled</span>'+
       '</div>'+
-      (t.oi>0?'<div class="kc-inc">⚠️ '+t.oi+' open incident'+(t.oi>1?'s':'')+'</div>':'')+
+      (t.oi>0?'<div class="kc-inc" style="margin-top:5px">⚠️ '+t.oi+' incident'+(t.oi>1?'s':'')+'</div>':'')+
     '</div>';
   }).join("");
 }
@@ -562,23 +574,38 @@ function rTrend(){
   annuals.sort((a,b)=>b.total-a.total);
   const rankMap={};annuals.forEach((s,i)=>rankMap[s.code]=i+1);
 
-  SECS.forEach(sec=>{
+  // Sort by annual total descending — highest first
+  const sortedSecs=[...SECS].sort((a,b)=>calcPts(b.code,"all").total-calcPts(a.code,"all").total);
+
+  sortedSecs.forEach((sec,rowIdx)=>{
     const ms=MONTHS.map(m=>calcPts(sec.code,m).total);
     const annual=calcPts(sec.code,"all").total;
     const rank=rankMap[sec.code];
     const rankStr=rank===1?"🥇 #1":rank===2?"🥈 #2":rank===3?"🥉 #3":"#"+rank;
-    h+='<tr>'+
-      '<td class="tt-ti">'+sec.code+'</td>'+
-      '<td class="tt-nm">'+sec.name+'</td>'+
+    // Row background for top 3
+    // Row style for top 3
+    const rowBg=rank===1?"background:linear-gradient(90deg,rgba(255,200,60,.22),rgba(255,200,60,.04))":
+                rank===2?"background:linear-gradient(90deg,rgba(180,190,200,.22),rgba(180,190,200,.04))":
+                rank===3?"background:linear-gradient(90deg,rgba(200,120,50,.18),rgba(200,120,50,.04))":"";
+    const borderL=rank===1?"border-left:4px solid #c89010":
+                  rank===2?"border-left:4px solid #909090":
+                  rank===3?"border-left:4px solid #9a5a18":"border-left:4px solid transparent";
+    const rowStyle='style="'+rowBg+';'+borderL+'"';
+    const secColor=rank===1?"#b8860b":rank===2?"#607080":rank===3?"#8b4513":"";
+    const medalIcon=rank===1?" 🥇":rank===2?" 🥈":rank===3?" 🥉":"";
+    h+='<tr '+rowStyle+'>'+
+      '<td class="tt-ti" style="'+(secColor?"color:"+secColor:"")+'">'+sec.code+medalIcon+'</td>'+
+      '<td class="tt-nm" style="font-weight:'+(rank<=3?"600":"400")+'">'+sec.name+'</td>'+
       ms.map(pts=>{
-        // colour cell by relative points
         const rel=pts/maxPts;
         const bg=pts===0?"#f5f5f5":rel>=0.7?"rgba(10,122,60,.15)":rel>=0.4?"rgba(196,122,0,.12)":"rgba(200,30,58,.1)";
         const col=pts===0?"#aaa":rel>=0.7?"#0a6630":rel>=0.4?"#8a5500":"#aa1428";
         return '<td><span class="tts" style="background:'+bg+';color:'+col+'">'+(pts>0?pts+"pts":"--")+'</span></td>';
       }).join("")+
-      '<td><span class="tt-an">'+annual+' pts</td>'+
-      '<td><b>'+rankStr+'</b></td>'+
+      '<td style="'+(rank===1?"background:rgba(255,200,60,.15)":rank===2?"background:rgba(180,190,200,.12)":rank===3?"background:rgba(200,120,50,.1)":"")+'">'+
+        '<span class="tt-an" style="font-size:'+(rank<=3?"19":"16")+'px;color:'+(rank===1?"#b8860b":rank===2?"#607080":rank===3?"#8b4513":"#0d1f44")+'">'+annual+' pts</span>'+
+      '</td>'+
+      '<td><span style="font-family:Teko,sans-serif;font-size:18px;font-weight:700;color:'+(rank===1?"#b8860b":rank===2?"#607080":rank===3?"#8b4513":"#444")+'">'+rankStr+'</span></td>'+
     '</tr>';
   });
   document.getElementById("trendTbl").innerHTML=h+"</tbody>";
