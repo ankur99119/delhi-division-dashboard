@@ -50,7 +50,7 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .br{background:rgba(255,61,90,.15);color:var(--ruby);border:1px solid rgba(255,61,90,.3)}
 .ba{background:rgba(255,179,64,.15);color:var(--amber);border:1px solid rgba(255,179,64,.3)}
 .bb{background:rgba(38,128,255,.15);color:var(--sapph);border:1px solid rgba(38,128,255,.3)}
-.map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px;margin-bottom:32px}
+.map-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:32px}
 .scard{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .scard:hover{border-color:#8899bb;box-shadow:0 4px 16px rgba(0,0,0,.1)}
 .sc-hdr{padding:10px 14px;background:linear-gradient(135deg,#1a2f5a,#0d1f44);border-bottom:1px solid #c8d4e4;display:flex;align-items:center;gap:8px}
@@ -59,9 +59,9 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .sc-meta{margin-left:auto;display:flex;gap:5px;align-items:center}
 .smd{width:7px;height:7px;border-radius:50%}
 .smc{font-size:11px;font-family:'DM Mono',monospace}
-.sc-tiles{padding:10px;display:flex;flex-wrap:wrap;gap:6px}
-.stile{width:62px;height:46px;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s,box-shadow .1s;border:1px solid transparent;position:relative;font-family:'DM Mono',monospace}
-.stile:hover{transform:scale(1.12);z-index:10}
+.sc-tiles{padding:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.stile{height:46px;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s,box-shadow .1s;border:1px solid transparent;position:relative;font-family:'DM Mono',monospace}
+.stile:hover{transform:scale(1.08);z-index:10}
 .stile.selected{outline:2px solid var(--amber);outline-offset:2px}
 .stile.green{background:rgba(10,122,60,.12);border-color:rgba(10,122,60,.5)}
 .stile.yellow{background:rgba(196,122,0,.12);border-color:rgba(196,122,0,.5)}
@@ -198,32 +198,46 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .blrti{font-size:12px;color:var(--sapph);font-weight:600}
 .blrpts{font-family:'Teko',sans-serif;font-size:26px;font-weight:700;color:var(--jade);text-align:center}
 .blrptsl{font-size:10px;color:var(--jade);text-align:center;text-transform:uppercase;letter-spacing:.5px}
-.cb{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px}
-.ctl{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.ctr{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid #edf0f5}
-.ctr:last-child{border-bottom:none}
-.ctr-rk{font-family:'Teko',sans-serif;font-size:18px;font-weight:700;color:var(--steel);width:24px;text-align:center}
-.ctr-nm{font-size:13px;flex:1;font-weight:500;color:#1a2540}
-.ctr-bt{width:110px;height:8px;background:#dde5f0;border-radius:3px;overflow:hidden}
+.cb{display:grid;grid-template-columns:320px 1fr;gap:12px;margin-bottom:32px;align-items:stretch}
+.ctl{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column}
+.ctr{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:all .15s;margin-bottom:4px}
+.ctr:hover{background:#f0f5ff;border-color:rgba(26,95,200,.3)}
+.ctr.active{background:rgba(26,95,200,.07);border-color:rgba(26,95,200,.4)}
+.ctr-rk{font-family:'Teko',sans-serif;font-size:20px;font-weight:700;color:var(--steel);width:26px;text-align:center}
+.ctr-nm{font-size:13px;font-weight:600;color:#1a2540}
+.ctr-bt{width:80px;height:8px;background:#dde5f0;border-radius:3px;overflow:hidden}
 .ctr-bf{height:100%;border-radius:3px;transition:width 1s ease}
-.ctr-ct{font-family:'Teko',sans-serif;font-size:20px;font-weight:600;color:var(--white);width:34px;text-align:right}
-.ctr-u{font-size:10px;color:var(--mist)}
-.clg{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-.clh{padding:14px 16px;background:#f0f4fa;border-bottom:1px solid #dde5f0;display:flex;align-items:center}
-.cls{max-height:360px;overflow-y:auto}
-.cls::-webkit-scrollbar{width:3px}
-.cls::-webkit-scrollbar-thumb{background:var(--steel)}
-.clr{padding:12px 16px;border-bottom:1px solid #edf0f5;display:grid;grid-template-columns:80px 1fr 80px 70px;gap:8px;align-items:center;transition:background .1s}
-.clr:hover{background:#f0f5ff}
-.clr:last-child{border-bottom:none}
-.clrd{font-family:'DM Mono',monospace;font-size:11px;color:#5a6a88}
-.clrs{font-size:13px;font-weight:500;color:#1a2540}
-.clrds{font-size:11px;color:#7a8898}
-.clrti{font-size:12px;color:var(--saffron);font-weight:600}
-.clro{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 8px;border-radius:7px;text-align:center}
-.clrc{background:rgba(139,92,246,.2);color:var(--violet)}
-.clrw{background:rgba(255,179,64,.2);color:var(--amber)}
-.clrx{background:rgba(42,53,80,.5);color:var(--mist)}
+.ctr-ct{font-family:'Teko',sans-serif;font-size:22px;font-weight:700;width:34px;text-align:right}
+.ctr-u{font-size:11px;color:var(--mist)}
+/* Counselling drill-down panel */
+.cdp{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column;min-height:100%}
+.cdph{padding:14px 18px;background:linear-gradient(135deg,#1a2f5a,#0d1f44);border-bottom:1px solid #dde5f0;display:flex;align-items:center;gap:12px}
+.cdph-ti{font-family:'Teko',sans-serif;font-size:26px;font-weight:700;color:var(--amber);line-height:1}
+.cdph-nm{font-size:13px;color:#a0b4cc;margin-top:1px}
+.cdph-ct{font-family:'Teko',sans-serif;font-size:32px;font-weight:700;color:var(--sapph);margin-left:auto;line-height:1}
+.cdph-ctl{font-size:11px;color:#7a8aaa;text-align:right}
+/* Summary tiles */
+.cdp-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 16px;background:#f8fafc;border-bottom:1px solid #edf0f5}
+.cdp-tile{background:#fff;border:1px solid #dde5f0;border-radius:8px;padding:10px 8px;text-align:center}
+.cdp-tile-n{font-family:'Teko',sans-serif;font-size:28px;font-weight:700;color:var(--sapph);line-height:1}
+.cdp-tile-l{font-size:11px;color:#5a6a88;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.cdp-tile-sub{font-size:11px;color:var(--mist);font-weight:600;margin-top:1px}
+/* Scroll log */
+.cdp-scroll{flex:1;overflow-y:auto}
+.cdp-scroll::-webkit-scrollbar{width:3px}
+.cdp-scroll::-webkit-scrollbar-thumb{background:var(--steel)}
+.cdp-row{padding:12px 16px;border-bottom:1px solid #edf0f5;display:grid;grid-template-columns:90px 1fr 80px;gap:10px;align-items:center;transition:background .1s}
+.cdp-row:hover{background:#f0f5ff}
+.cdp-row:last-child{border-bottom:none}
+.cdp-date{font-family:'DM Mono',monospace;font-size:12px;color:#5a6a88;line-height:1.4}
+.cdp-nm{font-size:13px;font-weight:600;color:#1a2540}
+.cdp-dsig{font-size:11px;color:#5a6a88;margin-top:1px}
+.cdp-rsn{font-size:11px;color:#7a8898;font-style:italic;margin-top:2px}
+.cdp-out{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 8px;border-radius:7px;text-align:center;white-space:nowrap}
+.cdp-outc{background:rgba(139,92,246,.2);color:var(--violet)}
+.cdp-outw{background:rgba(255,179,64,.2);color:var(--amber)}
+.cdp-outx{background:rgba(42,53,80,.5);color:var(--mist)}
+.cdp-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:200px;color:#a0b0c8;font-size:13px;gap:8px;background:repeating-linear-gradient(135deg,transparent,transparent 20px,rgba(0,0,40,.015) 20px,rgba(0,0,40,.015) 40px)}
 .tg{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;padding:18px;overflow-x:auto;margin-bottom:32px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .tt{width:100%;min-width:960px;border-collapse:collapse}
 .tt th{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a88;padding:6px 8px;text-align:center;border-bottom:2px solid #dde5f0}
@@ -249,7 +263,7 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .toast.err::before{content:'error  ';color:var(--ruby)}
 .nd{text-align:center;padding:28px;color:#8899bb;font-size:11px}
 @media(max-width:900px){.hero{grid-template-columns:repeat(3,1fr)}.charts-row,.bon-board,.cb{grid-template-columns:1fr}}
-@media(max-width:600px){.hero{grid-template-columns:repeat(2,1fr)}.kpi-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.hero{grid-template-columns:repeat(2,1fr)}.kpi-grid{grid-template-columns:1fr}.bdp-tiles,.cdp-tiles{grid-template-columns:repeat(2,1fr)}}
 </style>
 </head>
 <body>
@@ -300,12 +314,16 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
       <div class="bdp-scroll" id="bdp-scroll"><div class="bdp-empty"><span style="font-size:36px">👈</span><span>Select a TI section from the left to see bonus activity details</span></div></div>
     </div>
   </div>
-  <div class="sh"><div class="st">Staff Counselling Board</div><div class="ss-sub">Day-wise counselling records - who counselled whom - reason and outcome</div><span class="sbdg bb" id="coun-badge">0 records</span></div>
+  <div class="sh"><div class="st">Staff Counselling Board</div><div class="ss-sub">Click any TI to see details — who counselled whom, reason and outcome</div><span class="sbdg bb" id="coun-badge">0 records</span></div>
   <div class="cb">
     <div class="ctl"><div class="ct" style="margin-bottom:12px">Staff Counselled by Each TI</div><div id="counTI"></div></div>
-    <div class="clg">
-      <div class="clh"><span style="font-family:'Teko',sans-serif;font-size:18px;color:#0d1f44">Day-wise Counselling Log</span><span style="font-size:11px;color:var(--mist);margin-left:auto">Most recent first</span></div>
-      <div class="cls" id="counLog"></div>
+    <div class="cdp" id="cdp">
+      <div class="cdph">
+        <div><div class="cdph-ti" id="cdph-ti">Select a TI</div><div class="cdph-nm" id="cdph-nm">Click any row on the left to see details</div></div>
+        <div style="text-align:right"><div class="cdph-ct" id="cdph-ct">—</div><div class="cdph-ctl">staff counselled</div></div>
+      </div>
+      <div class="cdp-tiles" id="cdp-tiles" style="display:none"></div>
+      <div class="cdp-scroll" id="cdp-scroll"><div class="cdp-empty"><span style="font-size:36px">👈</span><span>Select a TI section from the left to see counselling details</span></div></div>
     </div>
   </div>
   <div class="sh"><div class="st">Month-wise Points Table</div><div class="ss-sub">Total points earned each month — all 12 TIs — highest total = top rank</div></div>
@@ -463,6 +481,9 @@ function rMap(){
       const sel=SS===s?" selected":"";
       h+='<div class="stile '+x+sel+'" onclick="cStn(\''+s+'\')" title="'+s+'"><span class="stile-c">'+s+'</span><span class="stile-d"></span></div>';
     });
+    // Pad to next multiple of 4 so grid rows are always complete
+    const rem=sec.stns.length%4;
+    if(rem>0){for(let i=0;i<4-rem;i++)h+='<div class="stile" style="visibility:hidden"></div>';}
     h+='</div></div>';
   });
   document.getElementById("mapGrid").innerHTML=h;
@@ -629,14 +650,66 @@ function showBonDetail(code,name){
     }).join("")
     :'<div class="bdp-empty"><span style="font-size:32px">🎯</span><span>No bonus activities recorded for TI/'+code+' in this period</span></div>';
 }
+let ACTIVE_COUN=null;
 function rCoun(){
   const data=mf(CO);
   document.getElementById("coun-badge").textContent=data.length+" records";
-  const tc=SECS.map((sec,i)=>({code:sec.code,name:sec.name,cnt:data.filter(d=>d.tiCode===sec.code).length,col:COLS[i]})).sort((a,b)=>b.cnt-a.cnt);
+  const tc=SECS.map((sec,i)=>({
+    code:sec.code,name:sec.name,
+    cnt:data.filter(d=>d.tiCode===sec.code).length,
+    col:COLS[i]
+  })).sort((a,b)=>b.cnt-a.cnt);
   const mx=Math.max(...tc.map(t=>t.cnt),1);
-  document.getElementById("counTI").innerHTML=tc.map((t,i)=>'<div class="ctr"><div class="ctr-rk">'+(i+1)+'</div><div><div class="ctr-nm">TI/'+t.code+' - '+t.name+'</div><div class="ctr-u">'+t.cnt+' staff counselled</div></div><div class="ctr-bt"><div class="ctr-bf" style="width:'+Math.round(t.cnt/mx*100)+'%;background:'+t.col+'"></div></div><div class="ctr-ct" style="color:'+t.col+'">'+t.cnt+'</div></div>').join("");
+  document.getElementById("counTI").innerHTML=tc.map((t,i)=>
+    '<div class="ctr'+(ACTIVE_COUN===t.code?" active":"")+'" onclick="showCounDetail(\''+t.code+'\',\''+t.name+'\')">'+
+      '<div class="ctr-rk">'+(i+1)+'</div>'+
+      '<div style="flex:1">'+
+        '<div class="ctr-nm">TI/'+t.code+'</div>'+
+        '<div class="ctr-u">'+t.name+' &nbsp;·&nbsp; '+t.cnt+' counselled</div>'+
+      '</div>'+
+      '<div class="ctr-bt"><div class="ctr-bf" style="width:'+Math.round(t.cnt/mx*100)+'%;background:'+t.col+'"></div></div>'+
+      '<div class="ctr-ct" style="color:'+t.col+'">'+t.cnt+'</div>'+
+    '</div>'
+  ).join("");
+  if(ACTIVE_COUN){const sec=SECS.find(s=>s.code===ACTIVE_COUN);if(sec)showCounDetail(sec.code,sec.name);}
+}
+function showCounDetail(code,name){
+  ACTIVE_COUN=code;
+  document.querySelectorAll(".ctr").forEach(r=>r.classList.remove("active"));
+  document.querySelectorAll(".ctr").forEach(r=>{if(r.getAttribute("onclick")&&r.getAttribute("onclick").includes("'"+code+"'"))r.classList.add("active");});
+  const data=mf(CO).filter(c=>c.tiCode===code);
+  document.getElementById("cdph-ti").textContent="TI / "+code;
+  document.getElementById("cdph-nm").textContent=name;
+  document.getElementById("cdph-ct").textContent=data.length;
+  // Summary tiles: Counselled / Warned / Other + unique designations
+  const counselled=data.filter(c=>c.outcome==="Counselled").length;
+  const warned=data.filter(c=>c.outcome==="Warned").length;
+  const other=data.length-counselled-warned;
+  const desigs=new Set(data.map(c=>c.desig).filter(Boolean));
+  const stations=new Set(data.map(c=>c.station).filter(Boolean));
+  const tilesEl=document.getElementById("cdp-tiles");
+  tilesEl.style.display="grid";
+  tilesEl.innerHTML=
+    '<div class="cdp-tile"><div style="font-size:22px">🟣</div><div class="cdp-tile-n" style="color:var(--violet)">'+counselled+'</div><div class="cdp-tile-l">Counselled</div></div>'+
+    '<div class="cdp-tile"><div style="font-size:22px">🟡</div><div class="cdp-tile-n" style="color:var(--amber)">'+warned+'</div><div class="cdp-tile-l">Warned</div></div>'+
+    '<div class="cdp-tile"><div style="font-size:22px">📍</div><div class="cdp-tile-n" style="color:var(--sapph)">'+stations.size+'</div><div class="cdp-tile-l">Stations</div></div>'+
+    '<div class="cdp-tile"><div style="font-size:22px">👷</div><div class="cdp-tile-n" style="color:var(--teal)">'+desigs.size+'</div><div class="cdp-tile-l">Designations</div></div>';
+  // Day-wise log
   const sorted=[...data].sort((a,b)=>b.date>a.date?1:-1);
-  document.getElementById("counLog").innerHTML=sorted.length?sorted.map(c=>'<div class="clr"><div><div class="clrd">'+(c.date||"--")+'</div><div class="clrd" style="color:var(--sapph)">'+(c.month||"")+'</div></div><div><div class="clrs">'+(c.staffName||"--")+'</div><div class="clrds">'+(c.desig||"")+(c.station?" - "+c.station:"")+'</div>'+(c.reason?'<div class="clrds" style="font-style:italic">'+c.reason+'</div>':"")+'</div><div class="clrti">TI/'+(c.tiCode||"--")+'<br><span style="font-size:8px;color:var(--mist)">'+(c.tiName||"")+'</span></div><div class="clro '+(c.outcome==="Counselled"?"clrc":c.outcome==="Warned"?"clrw":"clrx")+'">'+(c.outcome||"--")+'</div></div>').join(""):'<div class="nd">No counselling records yet</div>';
+  document.getElementById("cdp-scroll").innerHTML=sorted.length?
+    sorted.map(c=>{
+      const oc=c.outcome==="Counselled"?"cdp-outc":c.outcome==="Warned"?"cdp-outw":"cdp-outx";
+      return '<div class="cdp-row">'+
+        '<div><div class="cdp-date">'+(c.date||"--")+'</div><div class="cdp-date" style="color:var(--sapph)">'+(c.month||"")+'</div></div>'+
+        '<div>'+
+          '<div class="cdp-nm">'+(c.staffName||"--")+'</div>'+
+          '<div class="cdp-dsig">'+(c.desig||"")+(c.station?" — "+c.station:"")+'</div>'+
+          (c.reason?'<div class="cdp-rsn">'+c.reason+'</div>':"")+
+        '</div>'+
+        '<div><span class="cdp-out '+oc+'">'+(c.outcome||"--")+'</span></div>'+
+      '</div>';
+    }).join("")
+    :'<div class="cdp-empty"><span style="font-size:32px">🧑‍💼</span><span>No counselling records for TI/'+code+' in this period</span></div>';
 }
 function rTrend(){
   // Compute all monthly points for colour scaling
@@ -716,7 +789,7 @@ function cStn(stn){
   document.getElementById("popup").classList.add("open");
 }
 function closePopup(){document.getElementById("popup").classList.remove("open");SS=null;document.querySelectorAll(".stile").forEach(t=>t.classList.remove("selected"));}
-function onMC(){CM=document.getElementById("msel").value;ACTIVE_TI=null;ra();}
+function onMC(){CM=document.getElementById("msel").value;ACTIVE_TI=null;ACTIVE_COUN=null;ra();}
 function toast(msg,type){const t=document.getElementById("toast");t.textContent=msg;t.className="toast "+type+" show";setTimeout(()=>t.classList.remove("show"),3000);}
 window.addEventListener("load",loadAll);
 </script>
