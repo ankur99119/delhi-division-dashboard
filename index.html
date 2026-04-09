@@ -145,8 +145,8 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .tc-b{width:100%;border-radius:3px 3px 0 0;transition:height 1s ease;position:relative}
 .tc-b::after{content:attr(data-v);position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:8px;color:var(--fog);font-family:'DM Mono',monospace;white-space:nowrap}
 .tc-l{font-size:8px;color:#5a6a88;font-family:'DM Mono',monospace}
-.bon-board{display:grid;grid-template-columns:320px 1fr;gap:12px;margin-bottom:32px}
-.bc{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.bon-board{display:grid;grid-template-columns:320px 1fr;gap:12px;margin-bottom:32px;align-items:stretch}
+.bc{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column}
 .btr{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:all .15s;margin-bottom:4px}
 .btr:hover{background:#fffbf0;border-color:rgba(196,122,0,.3)}
 .btr.active{background:rgba(217,79,0,.07);border-color:rgba(217,79,0,.4)}
@@ -157,7 +157,8 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .btr-ct{font-family:'Teko',sans-serif;font-size:22px;font-weight:700;width:44px;text-align:right}
 .btr-u{font-size:11px;color:var(--mist)}
 /* Bonus drill-down panel */
-.bdp{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column}
+.bon-board{align-items:stretch}
+.bdp{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column;min-height:100%}
 .bdph{padding:14px 18px;background:linear-gradient(135deg,#1a2f5a,#0d1f44);border-bottom:1px solid #dde5f0;display:flex;align-items:center;gap:12px}
 .bdph-ti{font-family:'Teko',sans-serif;font-size:26px;font-weight:700;color:var(--amber);line-height:1}
 .bdph-nm{font-size:13px;color:#a0b4cc;margin-top:1px}
@@ -169,8 +170,8 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .bdp-tile-n{font-family:'Teko',sans-serif;font-size:28px;font-weight:700;color:var(--saffron);line-height:1}
 .bdp-tile-l{font-size:11px;color:#5a6a88;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 .bdp-tile-pts{font-size:12px;color:var(--jade);font-weight:700;margin-top:1px}
-/* Log inside panel */
-.bdp-scroll{flex:1;overflow-y:auto;max-height:340px}
+/* Log inside panel — flex:1 makes it grow to fill remaining space */
+.bdp-scroll{flex:1;overflow-y:auto}
 .bdp-scroll::-webkit-scrollbar{width:3px}
 .bdp-scroll::-webkit-scrollbar-thumb{background:var(--steel)}
 .bdp-row{padding:12px 16px;border-bottom:1px solid #edf0f5;display:grid;grid-template-columns:90px 1fr 70px;gap:10px;align-items:center;transition:background .1s}
@@ -181,7 +182,7 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .bdp-det{font-size:12px;color:#7a8898;margin-top:2px}
 .bdp-pts{font-family:'Teko',sans-serif;font-size:26px;font-weight:700;color:var(--jade);text-align:center;line-height:1}
 .bdp-ptsl{font-size:10px;color:var(--jade);text-align:center}
-.bdp-empty{text-align:center;padding:32px;color:#8899bb;font-size:13px}
+.bdp-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:200px;color:#a0b0c8;font-size:13px;gap:8px;background:repeating-linear-gradient(135deg,transparent,transparent 20px,rgba(0,0,40,.015) 20px,rgba(0,0,40,.015) 40px)}
 /* Log view header */
 .blg{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .blh{padding:14px 16px;background:#f0f4fa;border-bottom:1px solid #dde5f0;display:flex;align-items:center}
@@ -296,7 +297,7 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
         <div style="text-align:right"><div class="bdph-pts" id="bdph-pts">—</div><div class="bdph-ptsl">bonus pts</div></div>
       </div>
       <div class="bdp-tiles" id="bdp-tiles" style="display:none"></div>
-      <div class="bdp-scroll" id="bdp-scroll"><div class="bdp-empty">👈 Select a TI section from the left panel to see their bonus activity details</div></div>
+      <div class="bdp-scroll" id="bdp-scroll"><div class="bdp-empty"><span style="font-size:36px">👈</span><span>Select a TI section from the left to see bonus activity details</span></div></div>
     </div>
   </div>
   <div class="sh"><div class="st">Staff Counselling Board</div><div class="ss-sub">Day-wise counselling records - who counselled whom - reason and outcome</div><span class="sbdg bb" id="coun-badge">0 records</span></div>
@@ -626,7 +627,7 @@ function showBonDetail(code,name){
         '<div><div class="bdp-pts">+'+p+'</div><div class="bdp-ptsl">pts</div></div>'+
       '</div>';
     }).join("")
-    :'<div class="bdp-empty">No bonus activities recorded for TI/'+code+' in this period</div>';
+    :'<div class="bdp-empty"><span style="font-size:32px">🎯</span><span>No bonus activities recorded for TI/'+code+' in this period</span></div>';
 }
 function rCoun(){
   const data=mf(CO);
