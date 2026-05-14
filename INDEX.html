@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delhi Division - Sectional TI Performance Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#f0f4fa;--ink2:#e4eaf5;--ink3:#d8e2f0;--steel:#8899bb;
+  --mist:#5a6a88;--fog:#2a3550;--white:#ffffff;
+  --saffron:#d94f00;--amber:#c47a00;--jade:#0a7a3c;--ruby:#cc1f3a;
+  --sapph:#1a5fc8;--violet:#6b3fd4;--teal:#007a8a;--rose:#c8306a;
+  --card:rgba(0,0,0,.04);--card2:rgba(0,0,0,.07);
+  --border:rgba(0,0,40,.10);--border2:rgba(0,0,40,.18);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:#dde5f0}::-webkit-scrollbar-thumb{background:#aabbd0;border-radius:2px}
+.nav{position:sticky;top:0;z-index:500;background:rgba(240,244,250,.97);backdrop-filter:blur(20px);border-bottom:2px solid var(--saffron);padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:56px;box-shadow:0 2px 12px rgba(0,0,0,.08)}
+.nav-logo{font-family:'Teko',sans-serif;font-size:26px;font-weight:700;letter-spacing:2px;color:var(--saffron)}
+.nav-logo span{color:var(--amber)}
+.nav-sub{font-size:11px;color:#5a6a88;letter-spacing:2px;text-transform:uppercase;margin-top:1px}
+.nav-right{display:flex;align-items:center;gap:10px}
+.mpill{background:#ffffff;border:1px solid #c0cce0;border-radius:20px;padding:7px 16px;font-size:13px;color:#1a2540;font-family:'DM Mono',monospace;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.mpill option{background:#ffffff;color:#1a2540}
+.spill{background:linear-gradient(135deg,var(--saffron),var(--amber));border:none;border-radius:20px;padding:8px 20px;font-size:13px;font-weight:600;color:#ffffff;cursor:pointer;transition:opacity .2s}
+.spill:hover{opacity:.85}
+.spill:disabled{opacity:.5;cursor:not-allowed}
+.ssub{font-size:12px;color:#5a6a88;font-family:'DM Mono',monospace}
+.hero{background:linear-gradient(135deg,#1a2f5a,#0d1f44);border-bottom:3px solid var(--saffron);display:grid;grid-template-columns:repeat(6,1fr)}
+.hs{padding:18px;position:relative;cursor:default}
+.hs::after{content:'';position:absolute;right:0;top:15%;bottom:15%;width:1px;background:rgba(255,255,255,.15)}
+.hs:last-child::after{display:none}
+.hsi{font-size:22px;margin-bottom:4px}
+.hsn{font-family:'Teko',sans-serif;font-size:46px;font-weight:700;line-height:1;background:linear-gradient(135deg,var(--white),var(--fog));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hsn.g{background:linear-gradient(135deg,var(--jade),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hsn.r{background:linear-gradient(135deg,var(--ruby),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hsn.a{background:linear-gradient(135deg,var(--amber),var(--saffron));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hsn.b{background:linear-gradient(135deg,var(--sapph),var(--teal));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hsl{font-size:12px;color:#a0b4cc;text-transform:uppercase;letter-spacing:1.5px;margin-top:3px}
+.hss{font-size:11px;color:#7a8fb0;font-family:'DM Mono',monospace}
+.page{padding:24px;max-width:1800px;margin:0 auto}
+.sh{display:flex;align-items:baseline;gap:14px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #d0dce8}
+.st{font-family:'Teko',sans-serif;font-size:30px;font-weight:700;letter-spacing:.5px;color:#0d1f44;text-transform:uppercase}
+.ss-sub{font-size:13px;color:#5a6a88}
+.sbdg{margin-left:auto;padding:4px 12px;border-radius:10px;font-size:12px;font-weight:600;font-family:'DM Mono',monospace}
+.bg{background:rgba(0,196,124,.15);color:var(--jade);border:1px solid rgba(0,196,124,.3)}
+.br{background:rgba(255,61,90,.15);color:var(--ruby);border:1px solid rgba(255,61,90,.3)}
+.ba{background:rgba(255,179,64,.15);color:var(--amber);border:1px solid rgba(255,179,64,.3)}
+.bb{background:rgba(38,128,255,.15);color:var(--sapph);border:1px solid rgba(38,128,255,.3)}
+.map-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:32px}
+.scard{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.scard:hover{border-color:#8899bb;box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.sc-hdr{padding:10px 14px;background:linear-gradient(135deg,#1a2f5a,#0d1f44);border-bottom:1px solid #c8d4e4;display:flex;align-items:center;gap:8px}
+.sc-code{font-family:'Teko',sans-serif;font-size:22px;font-weight:700;color:#ffb340;letter-spacing:1px}
+.sc-nm{font-size:12px;color:#a0b4cc}
+.sc-meta{margin-left:auto;display:flex;gap:5px;align-items:center}
+.smd{width:7px;height:7px;border-radius:50%}
+.smc{font-size:11px;font-family:'DM Mono',monospace}
+.sc-tiles{padding:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.stile{height:46px;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .1s,box-shadow .1s;border:1px solid transparent;position:relative;font-family:'DM Mono',monospace}
+.stile:hover{transform:scale(1.08);z-index:10}
+.stile.selected{outline:2px solid var(--amber);outline-offset:2px}
+.stile.green{background:rgba(10,122,60,.12);border-color:rgba(10,122,60,.5)}
+.stile.yellow{background:rgba(196,122,0,.12);border-color:rgba(196,122,0,.5)}
+.stile.red{background:rgba(200,30,58,.12);border-color:rgba(200,30,58,.5)}
+.stile.grey{background:#edf0f5;border-color:#c8d0dc}
+.stile-c{font-size:12px;font-weight:700;letter-spacing:.3px}
+.stile.green .stile-c{color:#0a6630}
+.stile.yellow .stile-c{color:#8a5500}
+.stile.red .stile-c{color:#aa1428}
+.stile.grey .stile-c{color:#7a8898}
+.stile-d{width:4px;height:4px;border-radius:50%;margin-top:1px}
+.stile.green .stile-d{background:#0a7a3c;box-shadow:0 0 4px rgba(10,122,60,.6)}
+.stile.yellow .stile-d{background:#c47a00;box-shadow:0 0 4px rgba(196,122,0,.6);animation:bl 1.5s ease infinite}
+.stile.red .stile-d{background:#cc1f3a;box-shadow:0 0 4px rgba(204,31,58,.6);animation:bl 1s ease infinite}
+.stile.grey .stile-d{background:#b0bcc8}
+.sinc{position:absolute;top:1px;right:2px;font-size:8px;color:var(--ruby);font-weight:700}
+@keyframes bl{0%,100%{opacity:1}50%{opacity:.3}}
+.popup{display:none;position:fixed;right:20px;top:68px;width:380px;max-height:80vh;background:#ffffff;border:1px solid #c0cce0;border-top:3px solid var(--saffron);border-radius:10px;box-shadow:0 8px 40px rgba(0,0,40,.18);z-index:400;overflow:hidden;flex-direction:column}
+.popup.open{display:flex;animation:si .2s ease}
+@keyframes si{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.ph{padding:14px 16px;background:linear-gradient(135deg,#1a2f5a,#0d1f44);border-bottom:1px solid #c0cce0;display:flex;align-items:flex-start;justify-content:space-between}
+.pc{font-family:'Teko',sans-serif;font-size:34px;font-weight:700;color:var(--amber);line-height:1}
+.pti{font-size:13px;color:var(--saffron);font-weight:600;margin-top:2px}
+.psec{font-size:12px;color:var(--mist);margin-top:1px}
+.pcls{background:none;border:none;color:var(--mist);font-size:20px;cursor:pointer;padding:4px}
+.pcls:hover{color:var(--ruby)}
+.ppill{display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:5px}
+.ppg{background:rgba(0,196,124,.2);color:var(--jade);border:1px solid rgba(0,196,124,.4)}
+.ppy{background:rgba(255,179,64,.2);color:var(--amber);border:1px solid rgba(255,179,64,.4)}
+.ppr{background:rgba(255,61,90,.2);color:var(--ruby);border:1px solid rgba(255,61,90,.4)}
+.ppgr{background:rgba(42,53,80,.4);color:var(--mist);border:1px solid var(--steel)}
+.pb{flex:1;overflow-y:auto;padding:12px 16px;background:#f8fafc}
+.pb::-webkit-scrollbar{width:3px}
+.psl{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#5a6a88;margin:10px 0 6px;padding-bottom:3px;border-bottom:1px solid #dde5f0}
+.pe{background:#ffffff;border:1px solid #dde5f0;border-radius:5px;padding:10px 12px;margin-bottom:6px;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.pe:hover{background:#f0f5ff}
+.ped{font-family:'DM Mono',monospace;font-size:11px;color:var(--amber);margin-bottom:3px}
+.pet{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.pet.i{color:var(--jade)}.pet.n{color:var(--ruby)}.pet.c{color:var(--violet)}
+.peti{font-size:12px;color:var(--saffron);font-weight:600}
+.per{font-size:12px;color:#5a6a88;margin-top:2px;line-height:1.4}
+.pst{float:right;padding:2px 7px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:.5px}
+.pso{background:rgba(255,61,90,.2);color:var(--ruby)}
+.psc{background:rgba(0,196,124,.2);color:var(--jade)}
+.pempty{text-align:center;padding:16px 0;color:#8899bb;font-size:13px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:32px}
+.kc{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;padding:16px;position:relative;overflow:hidden;transition:border-color .2s,transform .15s,box-shadow .15s;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.kc:hover{border-color:#8899bb;transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.1)}
+.kc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.kc.r1::before{background:linear-gradient(90deg,var(--amber),var(--saffron))}
+.kc.r2::before{background:linear-gradient(90deg,var(--fog),var(--mist))}
+.kc.r3::before{background:linear-gradient(90deg,var(--saffron),var(--ruby))}
+.kc.rx::before{background:var(--steel)}
+.kc-rn{position:absolute;top:12px;right:12px;font-family:'Teko',sans-serif;font-size:28px;font-weight:700;opacity:.1;color:var(--white);line-height:1}
+.kc-sec{font-family:'Teko',sans-serif;font-size:22px;font-weight:700;color:var(--amber);letter-spacing:.5px;line-height:1}
+.kc-nm{font-size:12px;color:#5a6a88;margin-top:1px}
+.kc-top{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px}
+.kc-sc{font-family:'Teko',sans-serif;font-size:38px;font-weight:700;line-height:1;margin-left:auto}
+.kc-sc.ex{color:var(--jade)}.kc-sc.gd{color:var(--amber)}.kc-sc.pr{color:var(--ruby)}.kc-sc.nd{color:var(--steel);font-size:20px}
+.kc-stars{font-size:14px;color:var(--amber);margin-bottom:8px}
+.kc-bar{height:6px;background:#dde5f0;border-radius:3px;overflow:hidden;margin-bottom:10px}
+.kc-bf{height:100%;border-radius:3px;transition:width 1.2s cubic-bezier(.4,0,.2,1)}
+.kc-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px}
+.kcs{background:#f0f4fa;border:1px solid #dde5f0;border-radius:5px;padding:6px 7px;text-align:center}
+.kcv{font-family:'Teko',sans-serif;font-size:20px;font-weight:600;line-height:1}
+.kcl{font-size:10px;color:#7a8898;text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.kc-inc{font-size:12px;color:var(--ruby);margin-top:7px}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:32px}
+.cc{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.ct{font-family:'Teko',sans-serif;font-size:20px;font-weight:700;color:#0d1f44;letter-spacing:.5px;margin-bottom:3px}
+.csub{font-size:12px;color:#7a8898;margin-bottom:14px}
+.bar-chart{display:flex;flex-direction:column;gap:8px}
+.br-row{display:flex;align-items:center;gap:8px}
+.br-lbl{font-size:11px;color:#5a6a88;width:70px;text-align:right;font-family:'DM Mono',monospace}
+.br-track{flex:1;height:22px;background:#edf0f5;border-radius:3px;overflow:hidden}
+.br-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:600;color:#ffffff;transition:width 1s ease;white-space:nowrap;overflow:hidden}
+.br-val{font-size:11px;color:#1a2540;width:30px;text-align:right;font-family:'DM Mono',monospace}
+.trend-c{display:flex;align-items:flex-end;gap:5px;height:110px;padding-top:8px}
+.tc-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tc-bw{flex:1;width:100%;display:flex;align-items:flex-end;background:#edf0f5;border-radius:3px 3px 0 0;overflow:hidden}
+.tc-b{width:100%;border-radius:3px 3px 0 0;transition:height 1s ease;position:relative}
+.tc-b::after{content:attr(data-v);position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:8px;color:var(--fog);font-family:'DM Mono',monospace;white-space:nowrap}
+.tc-l{font-size:8px;color:#5a6a88;font-family:'DM Mono',monospace}
+.bon-board{display:grid;grid-template-columns:320px 1fr;gap:12px;margin-bottom:32px;align-items:stretch}
+.bc{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column}
+.btr{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:all .15s;margin-bottom:4px}
+.btr:hover{background:#fffbf0;border-color:rgba(196,122,0,.3)}
+.btr.active{background:rgba(217,79,0,.07);border-color:rgba(217,79,0,.4)}
+.btr-rk{font-family:'Teko',sans-serif;font-size:20px;font-weight:700;color:var(--steel);width:26px;text-align:center}
+.btr-nm{font-size:13px;flex:1;font-weight:600;color:#1a2540}
+.btr-bt{width:80px;height:8px;background:#dde5f0;border-radius:3px;overflow:hidden}
+.btr-bf{height:100%;border-radius:3px;transition:width 1s ease}
+.btr-ct{font-family:'Teko',sans-serif;font-size:22px;font-weight:700;width:44px;text-align:right}
+.btr-u{font-size:11px;color:var(--mist)}
+.bon-board{align-items:stretch}
+.bdp{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column;min-height:100%}
+.bdph{padding:14px 18px;background:linear-gradient(135deg,#1a2f5a,#0d1f44);border-bottom:1px solid #dde5f0;display:flex;align-items:center;gap:12px}
+.bdph-ti{font-family:'Teko',sans-serif;font-size:26px;font-weight:700;color:var(--amber);line-height:1}
+.bdph-nm{font-size:13px;color:#a0b4cc;margin-top:1px}
+.bdph-pts{font-family:'Teko',sans-serif;font-size:32px;font-weight:700;color:var(--jade);margin-left:auto;line-height:1}
+.bdph-ptsl{font-size:11px;color:#7a9a7a;text-align:right}
+.bdp-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 16px;background:#f8fafc;border-bottom:1px solid #edf0f5}
+.bdp-tile{background:#fff;border:1px solid #dde5f0;border-radius:8px;padding:10px 8px;text-align:center}
+.bdp-tile-n{font-family:'Teko',sans-serif;font-size:28px;font-weight:700;color:var(--saffron);line-height:1}
+.bdp-tile-l{font-size:11px;color:#5a6a88;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.bdp-tile-pts{font-size:12px;color:var(--jade);font-weight:700;margin-top:1px}
+.bdp-scroll{flex:1;overflow-y:auto}
+.bdp-scroll::-webkit-scrollbar{width:3px}
+.bdp-scroll::-webkit-scrollbar-thumb{background:var(--steel)}
+.bdp-row{padding:12px 16px;border-bottom:1px solid #edf0f5;display:grid;grid-template-columns:90px 1fr 70px;gap:10px;align-items:center;transition:background .1s}
+.bdp-row:hover{background:#fffbf0}
+.bdp-row:last-child{border-bottom:none}
+.bdp-date{font-family:'DM Mono',monospace;font-size:12px;color:#5a6a88;line-height:1.4}
+.bdp-act{font-size:13px;font-weight:700;color:var(--saffron)}
+.bdp-det{font-size:12px;color:#7a8898;margin-top:2px}
+.bdp-pts{font-family:'Teko',sans-serif;font-size:26px;font-weight:700;color:var(--jade);text-align:center;line-height:1}
+.bdp-ptsl{font-size:10px;color:var(--jade);text-align:center}
+.bdp-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:200px;color:#a0b0c8;font-size:13px;gap:8px;background:repeating-linear-gradient(135deg,transparent,transparent 20px,rgba(0,0,40,.015) 20px,rgba(0,0,40,.015) 40px)}
+.blg{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.blh{padding:14px 16px;background:#f0f4fa;border-bottom:1px solid #dde5f0;display:flex;align-items:center}
+.bls{max-height:400px;overflow-y:auto}
+.bls::-webkit-scrollbar{width:3px}
+.bls::-webkit-scrollbar-thumb{background:var(--steel)}
+.blr{padding:12px 16px;border-bottom:1px solid #edf0f5;display:grid;grid-template-columns:90px 1fr 100px 60px;gap:10px;align-items:center;transition:background .1s}
+.blr:hover{background:#fffbf0}
+.blr:last-child{border-bottom:none}
+.blrd{font-family:'DM Mono',monospace;font-size:11px;color:#5a6a88}
+.blrat{font-size:13px;font-weight:700;color:var(--saffron)}
+.blrds{font-size:12px;color:#7a8898;font-style:italic;margin-top:2px}
+.blrti{font-size:12px;color:var(--sapph);font-weight:600}
+.blrpts{font-family:'Teko',sans-serif;font-size:26px;font-weight:700;color:var(--jade);text-align:center}
+.blrptsl{font-size:10px;color:var(--jade);text-align:center;text-transform:uppercase;letter-spacing:.5px}
+.cb{display:grid;grid-template-columns:320px 1fr;gap:12px;margin-bottom:32px;align-items:stretch}
+.ctl{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;padding:18px;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column}
+.ctr{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;border:1px solid transparent;cursor:pointer;transition:all .15s;margin-bottom:4px}
+.ctr:hover{background:#f0f5ff;border-color:rgba(26,95,200,.3)}
+.ctr.active{background:rgba(26,95,200,.07);border-color:rgba(26,95,200,.4)}
+.ctr-rk{font-family:'Teko',sans-serif;font-size:20px;font-weight:700;color:var(--steel);width:26px;text-align:center}
+.ctr-nm{font-size:13px;font-weight:600;color:#1a2540}
+.ctr-bt{width:80px;height:8px;background:#dde5f0;border-radius:3px;overflow:hidden}
+.ctr-bf{height:100%;border-radius:3px;transition:width 1s ease}
+.ctr-ct{font-family:'Teko',sans-serif;font-size:22px;font-weight:700;width:34px;text-align:right}
+.ctr-u{font-size:11px;color:var(--mist)}
+.cdp{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column;min-height:100%}
+.cdph{padding:14px 18px;background:linear-gradient(135deg,#1a2f5a,#0d1f44);border-bottom:1px solid #dde5f0;display:flex;align-items:center;gap:12px}
+.cdph-ti{font-family:'Teko',sans-serif;font-size:26px;font-weight:700;color:var(--amber);line-height:1}
+.cdph-nm{font-size:13px;color:#a0b4cc;margin-top:1px}
+.cdph-ct{font-family:'Teko',sans-serif;font-size:32px;font-weight:700;color:var(--sapph);margin-left:auto;line-height:1}
+.cdph-ctl{font-size:11px;color:#7a8aaa;text-align:right}
+.cdp-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 16px;background:#f8fafc;border-bottom:1px solid #edf0f5}
+.cdp-tile{background:#fff;border:1px solid #dde5f0;border-radius:8px;padding:10px 8px;text-align:center}
+.cdp-tile-n{font-family:'Teko',sans-serif;font-size:28px;font-weight:700;color:var(--sapph);line-height:1}
+.cdp-tile-l{font-size:11px;color:#5a6a88;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
+.cdp-tile-sub{font-size:11px;color:var(--mist);font-weight:600;margin-top:1px}
+.cdp-scroll{flex:1;overflow-y:auto}
+.cdp-scroll::-webkit-scrollbar{width:3px}
+.cdp-scroll::-webkit-scrollbar-thumb{background:var(--steel)}
+.cdp-row{padding:12px 16px;border-bottom:1px solid #edf0f5;display:grid;grid-template-columns:90px 1fr 80px;gap:10px;align-items:center;transition:background .1s}
+.cdp-row:hover{background:#f0f5ff}
+.cdp-row:last-child{border-bottom:none}
+.cdp-date{font-family:'DM Mono',monospace;font-size:12px;color:#5a6a88;line-height:1.4}
+.cdp-nm{font-size:13px;font-weight:600;color:#1a2540}
+.cdp-dsig{font-size:11px;color:#5a6a88;margin-top:1px}
+.cdp-rsn{font-size:11px;color:#7a8898;font-style:italic;margin-top:2px}
+.cdp-out{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 8px;border-radius:7px;text-align:center;white-space:nowrap}
+.cdp-outc{background:rgba(139,92,246,.2);color:var(--violet)}
+.cdp-outw{background:rgba(255,179,64,.2);color:var(--amber)}
+.cdp-outx{background:rgba(42,53,80,.5);color:var(--mist)}
+.cdp-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:200px;color:#a0b0c8;font-size:13px;gap:8px;background:repeating-linear-gradient(135deg,transparent,transparent 20px,rgba(0,0,40,.015) 20px,rgba(0,0,40,.015) 40px)}
+.tg{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;padding:18px;overflow-x:auto;margin-bottom:32px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+.tt{width:100%;min-width:960px;border-collapse:collapse}
+.tt th{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#5a6a88;padding:6px 8px;text-align:center;border-bottom:2px solid #dde5f0}
+.tt td{padding:9px 8px;text-align:center;border-bottom:1px solid #edf0f5;font-size:12px}
+.tt tr:hover td{background:#f0f5ff}
+.tt-ti{font-family:'Teko',sans-serif;font-size:17px;font-weight:700;color:var(--amber);text-align:left;padding-left:14px}
+.tt-nm{font-size:11px;color:var(--mist);text-align:left;padding-left:14px}
+.tts{font-family:'DM Mono',monospace;font-size:12px;font-weight:500;border-radius:3px;padding:3px 6px}
+.tts.ex{background:rgba(0,196,124,.2);color:var(--jade)}
+.tts.gd{background:rgba(255,179,64,.15);color:var(--amber)}
+.tts.pr{background:rgba(255,61,90,.15);color:var(--ruby)}
+.tts.nd{color:var(--steel)}
+.tt-an{font-family:'Teko',sans-serif;font-size:18px;font-weight:700;color:#0d1f44}
+.ldo{position:fixed;inset:0;background:#0d1f44;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:600;gap:14px;transition:opacity .5s}
+.ldo.done{opacity:0;pointer-events:none}
+.ldt{font-family:'Teko',sans-serif;font-size:22px;font-weight:600;color:var(--fog);letter-spacing:3px}
+.ldb{width:180px;height:3px;background:var(--steel);border-radius:2px;overflow:hidden}
+.ldf{height:100%;width:0%;border-radius:2px;background:linear-gradient(90deg,var(--saffron),var(--amber));transition:width .3s ease}
+.lds{font-size:10px;color:var(--mist);font-family:'DM Mono',monospace}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(16px);background:#1a2f5a;border:1px solid #3a5090;border-radius:16px;padding:9px 18px;font-size:11px;font-weight:500;color:#e0e8f8;opacity:0;transition:all .3s;z-index:999;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.ok::before{content:'check  ';color:var(--jade)}
+.toast.err::before{content:'error  ';color:var(--ruby)}
+.nd{text-align:center;padding:28px;color:#8899bb;font-size:11px}
+@media(max-width:1400px){.map-grid{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:900px){.hero{grid-template-columns:repeat(3,1fr)}.map-grid{grid-template-columns:repeat(3,1fr)}.charts-row,.bon-board,.cb{grid-template-columns:1fr}}
+@media(max-width:600px){.hero{grid-template-columns:repeat(2,1fr)}.map-grid{grid-template-columns:repeat(2,1fr)}.kpi-grid{grid-template-columns:1fr}.bdp-tiles,.cdp-tiles{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="ldo" id="ldo"><div class="ldt">DELHI DIVISION</div><div class="lds" id="lds">Connecting...</div><div class="ldb"><div class="ldf" id="ldf"></div></div></div>
+<nav class="nav">
+  <div><div class="nav-logo">DELHI <span>DIVISION</span></div><div class="nav-sub">Sectional TI Performance Dashboard</div></div>
+  <div class="nav-right">
+    <select class="mpill" id="msel" onchange="onMC()">
+      <option value="all">All Months</option>
+      <option value="Apr-26">April 2026</option><option value="May-26">May 2026</option>
+      <option value="Jun-26">June 2026</option><option value="Jul-26">July 2026</option>
+      <option value="Aug-26">August 2026</option><option value="Sep-26">September 2026</option>
+      <option value="Oct-26">October 2026</option><option value="Nov-26">November 2026</option>
+      <option value="Dec-26">December 2026</option><option value="Jan-27">January 2027</option>
+      <option value="Feb-27">February 2027</option><option value="Mar-27">March 2027</option>
+    </select>
+    <span class="ssub" id="ssub">Not synced</span>
+    <button class="spill" id="sbtn" onclick="loadAll()">Sync Data</button>
+  </div>
+</nav>
+<div class="hero">
+  <div class="hs"><div class="hsi">🚉</div><div class="hsn" id="h0">160</div><div class="hsl">Total Stations</div><div class="hss">Delhi Division</div></div>
+  <div class="hs"><div class="hsi">✅</div><div class="hsn g" id="h1">0</div><div class="hsl">Stations Inspected</div><div class="hss" id="h1s">this period</div></div>
+  <div class="hs"><div class="hsi">📋</div><div class="hsn b" id="h2">0</div><div class="hsl">Total Inspections</div><div class="hss">all types</div></div>
+  <div class="hs"><div class="hsi">🎯</div><div class="hsn a" id="h3">0</div><div class="hsl">Bonus Points</div><div class="hss" id="h3s">across all TIs</div></div>
+  <div class="hs"><div class="hsi">🧑‍💼</div><div class="hsn a" id="h4">0</div><div class="hsl">Staff Counselled</div><div class="hss">all 13 TIs</div></div>
+  <div class="hs"><div class="hsi">📅</div><div class="hsn" id="h5">0</div><div class="hsl">Active Days</div><div class="hss">with recorded data</div></div>
+</div>
+<div class="page">
+  <div class="sh"><div class="st">Station Status Map</div><div class="ss-sub">🟡 Yellow = Not yet inspected this month &nbsp;·&nbsp; 🟢 Green = Inspected ✓ &nbsp;·&nbsp; Click any station for details</div></div>
+  <div class="map-grid" id="mapGrid"></div>
+  <div class="sh"><div class="st">TI Performance Scorecard</div><div class="ss-sub">Points earned — Inspections + Counselling + Bonus − Deductions · Highest points = Rank 1</div><span class="sbdg ba" id="kpi-badge">All Months</span></div>
+  <div class="kpi-grid" id="kpiGrid"></div>
+  <div class="sh"><div class="st">Inspection Analysis</div><div class="ss-sub">Coverage and monthly trends across division</div></div>
+  <div class="charts-row">
+    <div class="cc"><div class="ct">Inspections by TI Section</div><div class="csub">Total inspections done (all types combined)</div><div class="bar-chart" id="barChart"></div></div>
+    <div class="cc"><div class="ct">Monthly Inspection Trend</div><div class="csub">Total inspections recorded each month across division</div><div class="trend-c" id="trendC"></div></div>
+  </div>
+  <div class="sh"><div class="st">Bonus Points Board</div><div class="ss-sub">Click any TI to see details — Video Counselling · Nav-Sanraksha · Shunting Video · Good Work</div><span class="sbdg bg" id="bon-badge">0 pts earned</span></div>
+  <div class="bon-board">
+    <div class="bc"><div class="ct" style="margin-bottom:12px">Bonus Points by TI</div><div id="bonTI"></div></div>
+    <div class="bdp" id="bdp">
+      <div class="bdph">
+        <div><div class="bdph-ti" id="bdph-ti">Select a TI</div><div class="bdph-nm" id="bdph-nm">Click any row on the left to see details</div></div>
+        <div style="text-align:right"><div class="bdph-pts" id="bdph-pts">—</div><div class="bdph-ptsl">bonus pts</div></div>
+      </div>
+      <div class="bdp-tiles" id="bdp-tiles" style="display:none"></div>
+      <div class="bdp-scroll" id="bdp-scroll"><div class="bdp-empty"><span style="font-size:36px">👈</span><span>Select a TI section from the left to see bonus activity details</span></div></div>
+    </div>
+  </div>
+  <div class="sh"><div class="st">Staff Counselling Board</div><div class="ss-sub">Click any TI to see details — who counselled whom, reason and outcome</div><span class="sbdg bb" id="coun-badge">0 records</span></div>
+  <div class="cb">
+    <div class="ctl"><div class="ct" style="margin-bottom:12px">Staff Counselled by Each TI</div><div id="counTI"></div></div>
+    <div class="cdp" id="cdp">
+      <div class="cdph">
+        <div><div class="cdph-ti" id="cdph-ti">Select a TI</div><div class="cdph-nm" id="cdph-nm">Click any row on the left to see details</div></div>
+        <div style="text-align:right"><div class="cdph-ct" id="cdph-ct">—</div><div class="cdph-ctl">staff counselled</div></div>
+      </div>
+      <div class="cdp-tiles" id="cdp-tiles" style="display:none"></div>
+      <div class="cdp-scroll" id="cdp-scroll"><div class="cdp-empty"><span style="font-size:36px">👈</span><span>Select a TI section from the left to see counselling details</span></div></div>
+    </div>
+  </div>
+  <div class="sh"><div class="st">Month-wise Points Table</div><div class="ss-sub">Total points earned each month — all 13 TIs — highest total = top rank</div></div>
+  <div class="tg"><table class="tt" id="trendTbl"></table></div>
+</div>
+<div class="popup" id="popup">
+  <div class="ph">
+    <div><div class="pc" id="pcode">--</div><div class="pti" id="pti">--</div><div class="psec" id="psec">Delhi Division</div><div id="pst"></div></div>
+    <button class="pcls" onclick="closePopup()">X</button>
+  </div>
+  <div class="pb" id="pbody"></div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const SHEET_ID="1AagjNBgNdMQ9e_lMDaX2J3K-3N15JIqg6S3tXwUW-zI";
+const MONTHS=["Apr-26","May-26","Jun-26","Jul-26","Aug-26","Sep-26","Oct-26","Nov-26","Dec-26","Jan-27","Feb-27","Mar-27"];
+const MLBL=["Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar"];
+// ── SIMPLE POINTS SYSTEM ─────────────────────────────────────
+const INSP_PTS={
+  "Safety Inspection":5,
+  "Surprise Inspection":4,
+  "Night Inspection - Level Crossing":4,
+  "Night Inspection - Station":4,
+  "Night Inspection - Footplate (Goods)":4,
+  "Surprise Road Inspection":3
+};
+const INC_PTS={
+  "Derailment":-25,
+  "All Right Signal Exchange":-3,
+  "Wrong Routing":-3,
+  "Wrong Reception":-3,
+  "Abnormality (found true)":-5,
+  "Wrong Signal Movement by SM":-5,
+  "Incomplete Documentation by SM":-5,
+  "Non-submission Shunting Video":-3,
+  "Wrong Nav-Sanraksha Format":-3
+};
+const BONUS_PTS={
+  "Video Counselling Session":3,
+  "Correct Nav-Sanraksha Report":3,
+  "Shunting Supervision Video (Full Week)":3,
+  "Good Work by On-Duty Staff":5
+};
+function calcPts(tiCode,month){
+  const mfi=month==="all"?ID:ID.filter(r=>r.month===month);
+  const mfc=month==="all"?IC:IC.filter(r=>r.month===month);
+  const mfco=month==="all"?CO:CO.filter(r=>r.month===month);
+  const mfbo=month==="all"?BO:BO.filter(r=>r.month===month);
+  let inspPts=0;
+  mfi.filter(r=>r.tiCode===tiCode).forEach(r=>{
+    inspPts+=(INSP_PTS[r.type]||0);
+  });
+  const coun=mfco.filter(r=>r.tiCode===tiCode).length;
+  const counPts=Math.floor(coun/5)*2;
+  let bonusPts=0;
+  mfbo.filter(r=>r.tiCode===tiCode).forEach(r=>{
+    bonusPts+=(BONUS_PTS[r.actType]||0);
+  });
+  let negPts=0;
+  mfc.filter(r=>{const sec=SM[r.station];return sec&&sec.code===tiCode;}).forEach(r=>{
+    negPts+=(INC_PTS[r.type]||0);
+  });
+  const total=Math.max(0, inspPts+counPts+bonusPts+negPts);
+  return {total,inspPts,counPts,bonusPts,negPts:Math.abs(negPts),coun};
+}
+const INC_ICONS={"All Right Signal Exchange":"Signal","Derailment":"Derail","Wrong Routing":"Route","Wrong Reception":"Recptn","Abnormality (found true)":"Abnrml","Wrong Signal Movement by SM":"WrngSig","Incomplete Documentation by SM":"IncDoc","Non-submission Shunting Video":"ShuntV","Wrong Nav-Sanraksha Format":"NavFmt"};
+
+// ── SECS — 13 TIs (DLI + DELHI added) ────────────────────────
+const SECS=[
+  {code:"FDB",name:"Hemaraj",stns:["OKA","TKD","JNC","FDB","FDN","BVH","PYLA","AST","PWL"]},
+  {code:"DLI",name:"Ashutosh Thakur",stns:["DLI","GZB","DKZ","SZM","DSA","DSA(A&B)","SBB","ANVT","CYZ","GUH","MUD","MDNR","NO","MUZ"]},
+  {code:"DELHI",name:"Chirag Vats",stns:["DLI","GZB","DKZ","SZM","DSA","DSA(A&B)","SBB","ANVT","CYZ","GUH","MUD","MDNR","NO","MUZ"]},
+  {code:"MUT",name:"Sudheer Kanojia",stns:["PRTP","MTC","MUT","PQY","DRLA","SKF","KAT","MSP","JDW","MOZ","BMHR","RNA","DBD","THJ","NGL"]},
+  {code:"SMQL",name:"S.K. Dhiman",stns:["KEX","BPM","BTU","KPKI","KQL","SMQL","HID","THBN","NNX","RPMN","MNZ","TPZ"]},
+  {code:"NDLS",name:"Ashutosh Jha",stns:["NDLS","HNZM","TKJ","LPNR","DSJ","BRSQ","PTNR","DBSI","ANDI","SSB","NNO","GHE"]},
+  {code:"ROK",name:"Balbir Singh",stns:["BGZ","ASE","SPZ","KRZ","ABO","ROK","SMF","KHV","KZH","JNA","GKG","PLHW","MHRI","JHJ","DGHL","DBHL","MKMN","MAHM","MLKN","GRHI"]},
+  {code:"JHI",name:"Jaipraksh",stns:["JJT","KIU","BSPH","JHI","BZO","UCA","GSO","NRW","DHY","DTN","KIY","KLE","JCY","PHWR"]},
+  {code:"JHL",name:"Rajiv Ranjan",stns:["TUN","HMQ","JHL","BRZ","BLZ","NPX","MSZ","SSZ","MAUR","MASK","KTF","KZW","KZW(C)"]},
+  {code:"SNP",name:"Shriram Meena",stns:["BHD","HUK","NUR","RDDE","SNP","SLKN","RUG","GNU","BDMJ","SMK","MOHR"]},
+  {code:"KKDE",name:"Ravinder Rana",stns:["GRA","BZJT","KUN","BZK","TRR","NLKR","AMN","KKDE","DHKR","DPP","DHZM","SHDM","MOY"]},
+  {code:"PNP",name:"Anoop Kumar",stns:["DWNA","PNP","BBDE","BHMW","BHUL","KURN","MLDE","SFDE","PKDE","NLH","MDLA","GHNA","PPDE"]},
+  {code:"DEC",name:"Kailash Babu",stns:["DEE","DEC","PM","BWSN","GGN","GHH","PT","JSKA","PTRD","IHP","KIP","FN","MNAR"]}
+];
+
+// ── SM lookup: station → section (primary TI = first match) ──
+// For shared DLI/DELHI stations, popup shows both TIs via inspections data
+const SM={};
+SECS.forEach(s=>s.stns.forEach(st=>{
+  if(!SM[st]) SM[st]=s; // first definition wins for station card popup header
+}));
+
+// 13 colours — one per TI
+const COLS=["var(--saffron)","var(--amber)","var(--jade)","var(--sapph)","var(--violet)","var(--teal)","var(--rose)","var(--ruby)","var(--saffron)","var(--amber)","var(--jade)","var(--sapph)","var(--violet)"];
+
+let ID=[],IC=[],CO=[],BO=[];
+let CM="all",SS=null;
+
+async function loadAll(){
+  const btn=document.getElementById("sbtn");
+  btn.disabled=true;btn.textContent="Syncing...";
+  ld(10,"Connecting to Google Sheets...");
+  try{
+    const base="https://docs.google.com/spreadsheets/d/"+SHEET_ID+"/gviz/tq?tqx=out:json&sheet=";
+    ld(30,"Loading inspections...");
+    const [r1,r2,r3,r4]=await Promise.allSettled([fg(base+"INSPECTIONS"),fg(base+"INCIDENTS"),fg(base+"COUNSELLING"),fg(base+"BONUS_ACTIVITIES")]);
+    ld(75,"Processing records...");
+    ID=r1.status==="fulfilled"?ps(r1.value,["_","station","date","month","tiCode","tiName","type","remarks"]).filter(r=>r.station&&r.station!=="Station"):[];
+    IC=r2.status==="fulfilled"?ps(r2.value,["_","station","date","month","type","sm","desc","action","status","tiSec"]).filter(r=>r.station&&r.station!=="Station"):[];
+    CO=r3.status==="fulfilled"?ps(r3.value,["_","staffName","desig","station","date","month","tiCode","tiName","reason","outcome"]).filter(r=>r.staffName&&r.staffName!=="Staff Name"):[];
+    BO=r4.status==="fulfilled"?ps(r4.value,["_","tiCode","tiName","date","month","actType","details"]).filter(r=>r.tiCode&&r.tiCode!=="TI Code"):[];
+    localStorage.setItem("ddc",JSON.stringify({ID,IC,CO,BO,t:new Date().toLocaleTimeString()}));
+    document.getElementById("ssub").textContent="Synced "+new Date().toLocaleTimeString("en-IN");
+    toast("Data synced from Google Sheet","ok");
+  }catch(e){
+    const c=localStorage.getItem("ddc");
+    if(c){const d=JSON.parse(c);ID=d.ID||[];IC=d.IC||[];CO=d.CO||[];BO=d.BO||[];document.getElementById("ssub").textContent="Using cached data";toast("Using cached data","err");}
+    else{document.getElementById("ssub").textContent="Failed to load";toast("Could not load - make sheet public","err");}
+  }
+  ld(100,"Done!");
+  setTimeout(()=>document.getElementById("ldo").classList.add("done"),400);
+  btn.disabled=false;btn.textContent="Sync Data";
+  ra();
+}
+function ld(p,t){document.getElementById("ldf").style.width=p+"%";document.getElementById("lds").textContent=t;}
+async function fg(url){const r=await fetch(url);const t=await r.text();return JSON.parse(t.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);?\s*$/)[1]);}
+function ps(j,f){if(!j||!j.table||!j.table.rows)return[];return j.table.rows.map(row=>{const o={};f.forEach((k,i)=>{const c=row.c&&row.c[i];o[k]=c?(c.f!==undefined&&c.f!==null?c.f:(c.v!==undefined&&c.v!==null?c.v:'')):''});return o;});}
+function mf(a){return CM==="all"?a:a.filter(r=>r.month===CM)}
+function st(s){return mf(ID).filter(i=>i.station===s).length?"green":"yellow";}
+function ra(){rHero();rMap();rKPI();rCharts();rBonus();rCoun();rTrend();}
+function rHero(){
+  const fi=mf(ID),fc2=mf(CO),fb=mf(BO);
+  const ins=new Set(fi.map(i=>i.station)).size;
+  const cn=fc2.length;
+  const bonPts=SECS.reduce((sum,sec)=>sum+calcPts(sec.code,CM).bonusPts,0);
+  const days=new Set([...fi.map(i=>i.date),...fc2.map(i=>i.date),...fb.map(i=>i.date)].filter(Boolean)).size;
+  an("h1",ins);an("h2",fi.length);an("h3",bonPts);an("h4",cn);an("h5",days);
+  document.getElementById("h1s").textContent=CM==="all"?"all time":CM;
+  document.getElementById("h3s").textContent=fb.length+" bonus activities";
+  document.getElementById("bon-badge").textContent=bonPts+" pts earned";
+  document.getElementById("coun-badge").textContent=cn+" records";
+  document.getElementById("kpi-badge").textContent=CM==="all"?"All Months":CM;
+}
+function an(id,target){const el=document.getElementById(id);if(!el)return;const s=parseInt(el.textContent)||0,d=target-s;if(!d){el.textContent=target;return;}let step=0;const timer=setInterval(()=>{step++;el.textContent=Math.round(s+d*(step/20));if(step>=20){el.textContent=target;clearInterval(timer);}},25);}
+function rMap(){
+  let h="";
+  SECS.forEach(sec=>{
+    let sg=0;
+    sec.stns.forEach(s=>{if(st(s)==="green")sg++;});
+    // For DELHI card, label as "Shared with TI/DLI" to clarify
+    const sharedNote=sec.code==="DELHI"?' <span style="font-size:10px;color:#c47a00;font-weight:600">(Shared Section)</span>':'';
+    h+='<div class="scard"><div class="sc-hdr"><div><div class="sc-code">TI/'+sec.code+'</div><div class="sc-nm">'+sec.name+' - '+sec.stns.length+' stns'+sharedNote+'</div></div>';
+    var pendingCount=sec.stns.length-sg;
+    h+='<div class="sc-meta">'+
+      '<span style="font-size:10px;font-weight:700;color:#1a7a34">'+sg+'</span>'+
+      '<span style="font-size:9px;color:#aab0b8"> insp / </span>'+
+      '<span style="font-size:10px;font-weight:700;color:#8a6800">'+pendingCount+'</span>'+
+      '<span style="font-size:9px;color:#aab0b8"> pending</span>'+
+    '</div></div>';
+    h+='<div class="sc-tiles">';
+    sec.stns.forEach(s=>{
+      const x=st(s);
+      const sel=SS===s?" selected":"";
+      h+='<div class="stile '+x+sel+'" onclick="cStn(\''+s+'\',\''+sec.code+'\')" title="'+s+'"><span class="stile-c">'+s+'</span><span class="stile-d"></span></div>';
+    });
+    const rem=sec.stns.length%4;
+    if(rem>0){for(let i=0;i<4-rem;i++)h+='<div class="stile" style="visibility:hidden"></div>';}
+    h+='</div></div>';
+  });
+  document.getElementById("mapGrid").innerHTML=h;
+}
+function rKPI(){
+  const scores=SECS.map(sec=>{
+    const p=calcPts(sec.code,CM);
+    const ti=mf(ID).filter(i=>i.tiCode===sec.code);
+    return{
+      code:sec.code,name:sec.name,sc:sec.stns.length,
+      total:p.total,inspPts:p.inspPts,counPts:p.counPts,
+      bonusPts:p.bonusPts,negPts:p.negPts,
+      insp:ti.length,stInsp:new Set(ti.map(i=>i.station)).size,
+      cn:p.coun
+    };
+  }).sort((a,b)=>b.total-a.total);
+
+  const maxPts=Math.max(...scores.map(s=>s.total),1);
+
+  document.getElementById("kpiGrid").innerHTML=scores.map((t,i)=>{
+    const rc=i===0?"r1":i===1?"r2":i===2?"r3":"rx";
+    const medal=i===0?"🥇":i===1?"🥈":i===2?"🥉":"";
+    const rankLabel=i===0?"Rank #1":i===1?"Rank #2":i===2?"Rank #3":"Rank #"+(i+1);
+    const ptCol=i===0?"#c47a00":i===1?"#5a7a5a":i===2?"#8a4a00":"var(--sapph)";
+    const barCol=i<3?["#d4920a","#6b8c6b","#a05a10"][i]:"var(--sapph)";
+    const barPct=Math.round(t.total/maxPts*100);
+    const cardOverlay=i===0?'background:linear-gradient(135deg,rgba(255,200,50,.13),rgba(255,179,0,.05));border-color:rgba(212,160,10,.5);':
+                      i===1?'background:linear-gradient(135deg,rgba(200,200,210,.13),rgba(180,180,200,.05));border-color:rgba(160,160,180,.5);':
+                      i===2?'background:linear-gradient(135deg,rgba(205,130,60,.13),rgba(180,110,40,.05));border-color:rgba(180,110,40,.45);':'';
+    const medalLblCol=i===0?"#b8860b":i===1?"#708090":i===2?"#8b4513":"#5a6a88";
+    const eqStr='<span style="color:#0a6630;font-weight:700">+'+t.inspPts+'</span>'+
+      '<span style="color:#888;font-size:11px;margin:0 2px"> + </span>'+
+      '<span style="color:#1a7a4a;font-weight:700">+'+t.bonusPts+'</span>'+
+      '<span style="color:#888;font-size:11px;margin:0 2px"> + </span>'+
+      '<span style="color:#6b3fd4;font-weight:700">+'+t.counPts+'</span>'+
+      '<span style="color:#888;font-size:11px;margin:0 2px"> − </span>'+
+      '<span style="color:'+(t.negPts>0?"#aa1428":"#aaa")+';font-weight:700">'+t.negPts+'</span>'+
+      '<span style="color:#888;font-size:11px;margin:0 3px"> = </span>'+
+      '<span style="color:'+ptCol+';font-weight:700;font-size:15px">'+t.total+' pts</span>';
+    // Badge for shared section
+    const sharedBadge=t.code==="DELHI"?'<span style="font-size:9px;background:rgba(196,122,0,.15);color:#8a5500;border:1px solid rgba(196,122,0,.3);border-radius:8px;padding:1px 6px;margin-left:4px">Shared</span>':'';
+    return '<div class="kc '+rc+'" style="'+cardOverlay+'">'+
+      '<div class="kc-rn">#'+(i+1)+'</div>'+
+      '<div class="kc-top">'+
+        '<div><div class="kc-sec">'+medal+' TI/'+t.code+sharedBadge+'</div>'+
+        '<div class="kc-nm">'+t.name+' &nbsp;·&nbsp; '+t.sc+' stations</div></div>'+
+        '<div style="text-align:right">'+
+          '<div style="font-family:Teko,sans-serif;font-size:42px;font-weight:700;line-height:1;color:'+ptCol+'">'+t.total+'</div>'+
+          '<div style="font-size:9px;color:#7a8898;text-transform:uppercase;letter-spacing:1px">points</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="font-size:10px;font-weight:700;color:'+medalLblCol+';margin-bottom:6px;letter-spacing:.5px">'+rankLabel+'</div>'+
+      '<div class="kc-bar"><div class="kc-bf" style="width:'+barPct+'%;background:'+barCol+'"></div></div>'+
+      '<div style="background:rgba(0,0,0,.04);border-radius:5px;padding:7px 10px;margin:8px 0 6px;font-family:Teko,sans-serif;font-size:14px;text-align:center">'+eqStr+'</div>'+
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:2px;text-align:center;margin-bottom:8px">'+
+        '<div style="font-size:8px;color:#0a6630;text-transform:uppercase;letter-spacing:.5px">Insp</div>'+
+        '<div style="font-size:8px;color:#1a7a4a;text-transform:uppercase;letter-spacing:.5px">Bonus</div>'+
+        '<div style="font-size:8px;color:#6b3fd4;text-transform:uppercase;letter-spacing:.5px">Counselling</div>'+
+        '<div style="font-size:8px;color:'+(t.negPts>0?"#aa1428":"#aaa")+';text-transform:uppercase;letter-spacing:.5px">Deductions</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid rgba(0,0,0,.06);padding-top:6px">'+
+        '<span style="font-size:9px;color:#5a6a88">📋 '+t.insp+' inspections</span>'+
+        '<span style="font-size:9px;color:#aaa">·</span>'+
+        '<span style="font-size:9px;color:#5a6a88">📍 '+t.stInsp+'/'+t.sc+' stns</span>'+
+        '<span style="font-size:9px;color:#aaa">·</span>'+
+        '<span style="font-size:9px;color:#5a6a88">🧑‍💼 '+t.cn+' counselled</span>'+
+      '</div>'+
+    '</div>';
+  }).join("");
+}
+function rCharts(){
+  const tc=SECS.map((sec,i)=>({code:sec.code,name:sec.name,cnt:mf(ID).filter(d=>d.tiCode===sec.code).length,col:COLS[i]})).sort((a,b)=>b.cnt-a.cnt);
+  const mx=Math.max(...tc.map(t=>t.cnt),1);
+  document.getElementById("barChart").innerHTML=tc.map(t=>'<div class="br-row"><div class="br-lbl">'+t.code+'</div><div class="br-track"><div class="br-fill" style="width:'+Math.round(t.cnt/mx*100)+'%;background:'+t.col+'">'+t.name.split(" ")[0]+'</div></div><div class="br-val">'+t.cnt+'</div></div>').join("");
+  const mc=MONTHS.map((m,i)=>({m,l:MLBL[i],cnt:ID.filter(d=>d.month===m).length}));
+  const mm=Math.max(...mc.map(x=>x.cnt),1);
+  const pal=["var(--sapph)","var(--sapph)","var(--sapph)","var(--jade)","var(--jade)","var(--jade)","var(--amber)","var(--amber)","var(--amber)","var(--saffron)","var(--saffron)","var(--saffron)"];
+  document.getElementById("trendC").innerHTML=mc.map((m,i)=>'<div class="tc-col"><div class="tc-bw"><div class="tc-b" style="height:'+Math.max(mm>0?Math.round(m.cnt/mm*100):2,2)+'%;background:'+pal[i]+';width:100%" data-v="'+(m.cnt||"")+'"></div></div><div class="tc-l">'+m.l+'</div></div>').join("");
+}
+const BONUS_ICONS={"Video Counselling Session":"🎥","Correct Nav-Sanraksha Report":"📋","Shunting Supervision Video (Full Week)":"📹","Good Work by On-Duty Staff":"⭐"};
+let ACTIVE_TI=null;
+function rBonus(){
+  const data=mf(BO);
+  const totalPts=SECS.reduce((sum,sec)=>sum+calcPts(sec.code,CM).bonusPts,0);
+  document.getElementById("bon-badge").textContent=totalPts+" pts earned";
+
+  const tc=SECS.map((sec,i)=>({
+    code:sec.code,name:sec.name,
+    pts:calcPts(sec.code,CM).bonusPts,
+    cnt:data.filter(d=>d.tiCode===sec.code).length,
+    col:COLS[i]
+  })).sort((a,b)=>b.pts-a.pts);
+  const mx=Math.max(...tc.map(t=>t.pts),1);
+
+  document.getElementById("bonTI").innerHTML=tc.map((t,i)=>
+    '<div class="btr'+(ACTIVE_TI===t.code?" active":"")+'" onclick="showBonDetail(\''+t.code+'\',\''+t.name+'\')">'+
+      '<div class="btr-rk">'+(i+1)+'</div>'+
+      '<div style="flex:1">'+
+        '<div class="btr-nm">TI/'+t.code+'</div>'+
+        '<div class="btr-u">'+t.name+' &nbsp;·&nbsp; '+t.cnt+' activit'+(t.cnt===1?'y':'ies')+'</div>'+
+      '</div>'+
+      '<div class="btr-bt"><div class="btr-bf" style="width:'+Math.round(t.pts/mx*100)+'%;background:'+t.col+'"></div></div>'+
+      '<div class="btr-ct" style="color:'+t.col+'">'+t.pts+'</div>'+
+    '</div>'
+  ).join("")||'<div style="text-align:center;padding:20px;color:#8899bb;font-size:13px">No bonus activities yet</div>';
+
+  if(ACTIVE_TI){
+    const sec=SECS.find(s=>s.code===ACTIVE_TI);
+    if(sec) showBonDetail(sec.code,sec.name);
+  }
+}
+function showBonDetail(code,name){
+  ACTIVE_TI=code;
+  document.querySelectorAll(".btr").forEach(r=>r.classList.remove("active"));
+  document.querySelectorAll(".btr").forEach(r=>{if(r.onclick&&r.getAttribute("onclick")&&r.getAttribute("onclick").includes("'"+code+"'"))r.classList.add("active");});
+
+  const data=mf(BO).filter(b=>b.tiCode===code);
+  const pts=calcPts(code,CM).bonusPts;
+  document.getElementById("bdph-ti").textContent="TI / "+code;
+  document.getElementById("bdph-nm").textContent=name;
+  document.getElementById("bdph-pts").textContent=pts;
+
+  const actTypes=[
+    {key:"Video Counselling Session",icon:"🎥",short:"Video Coun.",pts:BONUS_PTS["Video Counselling Session"]||0},
+    {key:"Correct Nav-Sanraksha Report",icon:"📋",short:"Nav-Sanraksha",pts:BONUS_PTS["Correct Nav-Sanraksha Report"]||0},
+    {key:"Shunting Supervision Video (Full Week)",icon:"📹",short:"Shunting Video",pts:BONUS_PTS["Shunting Supervision Video (Full Week)"]||0},
+    {key:"Good Work by On-Duty Staff",icon:"⭐",short:"Good Work",pts:BONUS_PTS["Good Work by On-Duty Staff"]||0}
+  ];
+  const tilesEl=document.getElementById("bdp-tiles");
+  tilesEl.style.display="grid";
+  tilesEl.innerHTML=actTypes.map(a=>{
+    const cnt=data.filter(d=>d.actType===a.key).length;
+    const earned=cnt*a.pts;
+    return '<div class="bdp-tile">'+
+      '<div style="font-size:22px">'+a.icon+'</div>'+
+      '<div class="bdp-tile-n">'+cnt+'</div>'+
+      '<div class="bdp-tile-l">'+a.short+'</div>'+
+      '<div class="bdp-tile-pts">+'+earned+' pts</div>'+
+    '</div>';
+  }).join("");
+
+  const sorted=[...data].sort((a,b)=>b.date>a.date?1:-1);
+  document.getElementById("bdp-scroll").innerHTML=sorted.length?
+    sorted.map(b=>{
+      const p=BONUS_PTS[b.actType]||0;
+      const icon=BONUS_ICONS[b.actType]||"🎯";
+      return '<div class="bdp-row">'+
+        '<div><div class="bdp-date">'+(b.date||"--")+'</div><div class="bdp-date" style="color:var(--sapph)">'+(b.month||"")+'</div></div>'+
+        '<div><div class="bdp-act">'+icon+' '+(b.actType||"--")+'</div>'+(b.details?'<div class="bdp-det">'+b.details+'</div>':'')+'</div>'+
+        '<div><div class="bdp-pts">+'+p+'</div><div class="bdp-ptsl">pts</div></div>'+
+      '</div>';
+    }).join("")
+    :'<div class="bdp-empty"><span style="font-size:32px">🎯</span><span>No bonus activities recorded for TI/'+code+' in this period</span></div>';
+}
+let ACTIVE_COUN=null;
+function rCoun(){
+  const data=mf(CO);
+  document.getElementById("coun-badge").textContent=data.length+" records";
+  const tc=SECS.map((sec,i)=>({
+    code:sec.code,name:sec.name,
+    cnt:data.filter(d=>d.tiCode===sec.code).length,
+    col:COLS[i]
+  })).sort((a,b)=>b.cnt-a.cnt);
+  const mx=Math.max(...tc.map(t=>t.cnt),1);
+  document.getElementById("counTI").innerHTML=tc.map((t,i)=>
+    '<div class="ctr'+(ACTIVE_COUN===t.code?" active":"")+'" onclick="showCounDetail(\''+t.code+'\',\''+t.name+'\')">'+
+      '<div class="ctr-rk">'+(i+1)+'</div>'+
+      '<div style="flex:1">'+
+        '<div class="ctr-nm">TI/'+t.code+'</div>'+
+        '<div class="ctr-u">'+t.name+' &nbsp;·&nbsp; '+t.cnt+' counselled</div>'+
+      '</div>'+
+      '<div class="ctr-bt"><div class="ctr-bf" style="width:'+Math.round(t.cnt/mx*100)+'%;background:'+t.col+'"></div></div>'+
+      '<div class="ctr-ct" style="color:'+t.col+'">'+t.cnt+'</div>'+
+    '</div>'
+  ).join("");
+  if(ACTIVE_COUN){const sec=SECS.find(s=>s.code===ACTIVE_COUN);if(sec)showCounDetail(sec.code,sec.name);}
+}
+function showCounDetail(code,name){
+  ACTIVE_COUN=code;
+  document.querySelectorAll(".ctr").forEach(r=>r.classList.remove("active"));
+  document.querySelectorAll(".ctr").forEach(r=>{if(r.getAttribute("onclick")&&r.getAttribute("onclick").includes("'"+code+"'"))r.classList.add("active");});
+  const data=mf(CO).filter(c=>c.tiCode===code);
+  document.getElementById("cdph-ti").textContent="TI / "+code;
+  document.getElementById("cdph-nm").textContent=name;
+  document.getElementById("cdph-ct").textContent=data.length;
+  const counselled=data.filter(c=>c.outcome==="Counselled").length;
+  const warned=data.filter(c=>c.outcome==="Warned").length;
+  const desigs=new Set(data.map(c=>c.desig).filter(Boolean));
+  const stations=new Set(data.map(c=>c.station).filter(Boolean));
+  const tilesEl=document.getElementById("cdp-tiles");
+  tilesEl.style.display="grid";
+  tilesEl.innerHTML=
+    '<div class="cdp-tile"><div style="font-size:22px">🟣</div><div class="cdp-tile-n" style="color:var(--violet)">'+counselled+'</div><div class="cdp-tile-l">Counselled</div></div>'+
+    '<div class="cdp-tile"><div style="font-size:22px">🟡</div><div class="cdp-tile-n" style="color:var(--amber)">'+warned+'</div><div class="cdp-tile-l">Warned</div></div>'+
+    '<div class="cdp-tile"><div style="font-size:22px">📍</div><div class="cdp-tile-n" style="color:var(--sapph)">'+stations.size+'</div><div class="cdp-tile-l">Stations</div></div>'+
+    '<div class="cdp-tile"><div style="font-size:22px">👷</div><div class="cdp-tile-n" style="color:var(--teal)">'+desigs.size+'</div><div class="cdp-tile-l">Designations</div></div>';
+  const sorted=[...data].sort((a,b)=>b.date>a.date?1:-1);
+  document.getElementById("cdp-scroll").innerHTML=sorted.length?
+    sorted.map(c=>{
+      const oc=c.outcome==="Counselled"?"cdp-outc":c.outcome==="Warned"?"cdp-outw":"cdp-outx";
+      return '<div class="cdp-row">'+
+        '<div><div class="cdp-date">'+(c.date||"--")+'</div><div class="cdp-date" style="color:var(--sapph)">'+(c.month||"")+'</div></div>'+
+        '<div>'+
+          '<div class="cdp-nm">'+(c.staffName||"--")+'</div>'+
+          '<div class="cdp-dsig">'+(c.desig||"")+(c.station?" — "+c.station:"")+'</div>'+
+          (c.reason?'<div class="cdp-rsn">'+c.reason+'</div>':"")+
+        '</div>'+
+        '<div><span class="cdp-out '+oc+'">'+(c.outcome||"--")+'</span></div>'+
+      '</div>';
+    }).join("")
+    :'<div class="cdp-empty"><span style="font-size:32px">🧑‍💼</span><span>No counselling records for TI/'+code+' in this period</span></div>';
+}
+function rTrend(){
+  const allPts=[];
+  SECS.forEach(sec=>{
+    MONTHS.forEach(m=>{allPts.push(calcPts(sec.code,m).total);});
+  });
+  const maxPts=Math.max(...allPts,1);
+
+  let h='<thead><tr>'+
+    '<th style="text-align:left;padding-left:14px">SECTION</th>'+
+    '<th style="text-align:left;padding-left:14px">TI NAME</th>'+
+    MONTHS.map(m=>'<th>'+m+'</th>').join("")+
+    '<th>TOTAL PTS</th><th>RANK</th>'+
+  '</tr></thead><tbody>';
+
+  const annuals=SECS.map(sec=>({code:sec.code,name:sec.name,total:calcPts(sec.code,"all").total}));
+  annuals.sort((a,b)=>b.total-a.total);
+  const rankMap={};annuals.forEach((s,i)=>rankMap[s.code]=i+1);
+
+  const sortedSecs=[...SECS].sort((a,b)=>calcPts(b.code,"all").total-calcPts(a.code,"all").total);
+
+  sortedSecs.forEach((sec,rowIdx)=>{
+    const ms=MONTHS.map(m=>calcPts(sec.code,m).total);
+    const annual=calcPts(sec.code,"all").total;
+    const rank=rankMap[sec.code];
+    const rankStr=rank===1?"🥇 #1":rank===2?"🥈 #2":rank===3?"🥉 #3":"#"+rank;
+    const rowBg=rank===1?"background:linear-gradient(90deg,rgba(255,200,60,.22),rgba(255,200,60,.04))":
+                rank===2?"background:linear-gradient(90deg,rgba(180,190,200,.22),rgba(180,190,200,.04))":
+                rank===3?"background:linear-gradient(90deg,rgba(200,120,50,.18),rgba(200,120,50,.04))":"";
+    const borderL=rank===1?"border-left:4px solid #c89010":
+                  rank===2?"border-left:4px solid #909090":
+                  rank===3?"border-left:4px solid #9a5a18":"border-left:4px solid transparent";
+    const rowStyle='style="'+rowBg+';'+borderL+'"';
+    const secColor=rank===1?"#b8860b":rank===2?"#607080":rank===3?"#8b4513":"";
+    const medalIcon=rank===1?" 🥇":rank===2?" 🥈":rank===3?" 🥉":"";
+    // Shared badge in trend table
+    const sharedMark=sec.code==="DELHI"?' <span style="font-size:9px;color:#8a5500;font-weight:600">(Shared)</span>':'';
+    h+='<tr '+rowStyle+'>'+
+      '<td class="tt-ti" style="'+(secColor?"color:"+secColor:"")+'">'+sec.code+medalIcon+'</td>'+
+      '<td class="tt-nm" style="font-weight:'+(rank<=3?"600":"400")+'">'+sec.name+sharedMark+'</td>'+
+      ms.map(pts=>{
+        const rel=pts/maxPts;
+        const bg=pts===0?"#f5f5f5":rel>=0.7?"rgba(10,122,60,.15)":rel>=0.4?"rgba(196,122,0,.12)":"rgba(200,30,58,.1)";
+        const col=pts===0?"#aaa":rel>=0.7?"#0a6630":rel>=0.4?"#8a5500":"#aa1428";
+        return '<td><span class="tts" style="background:'+bg+';color:'+col+'">'+(pts>0?pts+"pts":"--")+'</span></td>';
+      }).join("")+
+      '<td style="'+(rank===1?"background:rgba(255,200,60,.15)":rank===2?"background:rgba(180,190,200,.12)":rank===3?"background:rgba(200,120,50,.1)":"")+'">'+
+        '<span class="tt-an" style="font-size:'+(rank<=3?"19":"16")+'px;color:'+(rank===1?"#b8860b":rank===2?"#607080":rank===3?"#8b4513":"#0d1f44")+'">'+annual+' pts</span>'+
+      '</td>'+
+      '<td><span style="font-family:Teko,sans-serif;font-size:18px;font-weight:700;color:'+(rank===1?"#b8860b":rank===2?"#607080":rank===3?"#8b4513":"#444")+'">'+rankStr+'</span></td>'+
+    '</tr>';
+  });
+  document.getElementById("trendTbl").innerHTML=h+"</tbody>";
+}
+// ── Station popup — now accepts tiCode context for shared stations ──
+function cStn(stn,tiCodeCtx){
+  SS=stn;
+  document.querySelectorAll(".stile").forEach(t=>t.classList.remove("selected"));
+  // Highlight tiles matching this station in the specific card
+  document.querySelectorAll(".stile").forEach(t=>{
+    if(t.getAttribute("onclick")==="cStn('"+stn+"','"+tiCodeCtx+"')")t.classList.add("selected");
+  });
+  const sec=tiCodeCtx?SECS.find(s=>s.code===tiCodeCtx):SM[stn];
+  const s=st(stn);
+  // Show inspections by this specific TI at this station
+  const si=[...ID].filter(i=>i.station===stn&&(!tiCodeCtx||i.tiCode===tiCodeCtx)).sort((a,b)=>b.date>a.date?1:-1);
+  // Show all inspections at this station (any TI) as secondary
+  const siAll=[...ID].filter(i=>i.station===stn&&tiCodeCtx&&i.tiCode!==tiCodeCtx).sort((a,b)=>b.date>a.date?1:-1);
+  const cc=[...CO].filter(i=>i.station===stn&&(!tiCodeCtx||i.tiCode===tiCodeCtx)).sort((a,b)=>b.date>a.date?1:-1);
+  document.getElementById("pcode").textContent=stn;
+  document.getElementById("pti").textContent="TI / "+(sec?sec.code:"--")+" - "+(sec?sec.name:"--");
+  document.getElementById("psec").textContent="Delhi Division - "+(sec?sec.stns.length:"--")+" stations in section";
+  const pm={green:{c:"ppg",t:"Inspected - All Clear"},yellow:{c:"ppy",t:"Not Yet Inspected"},red:{c:"ppr",t:"Not Inspected"},grey:{c:"ppgr",t:"No Data"}};
+  const p=pm[s]||pm.grey;
+  document.getElementById("pst").innerHTML='<span class="ppill '+p.c+'">'+p.t+'</span>';
+  let b="";
+  b+='<div class="psl">Inspections by TI/'+tiCodeCtx+' ('+si.length+')</div>';
+  b+=si.length?si.map(i=>'<div class="pe"><div class="ped">'+(i.date||"--")+" - "+(i.month||"--")+'</div><div class="pet i">'+(i.type||"--")+'</div><div class="peti">'+(i.tiName||i.tiCode||"--")+'</div>'+(i.remarks?'<div class="per">'+i.remarks+'</div>':"")+'</div>').join(""):'<div class="pempty">No inspections by this TI recorded</div>';
+  if(siAll.length){
+    b+='<div class="psl">Also Inspected by Other TI ('+siAll.length+')</div>';
+    b+=siAll.map(i=>'<div class="pe"><div class="ped">'+(i.date||"--")+" - "+(i.month||"--")+'</div><div class="pet i">'+(i.type||"--")+'</div><div class="peti">'+(i.tiName||i.tiCode||"--")+'</div>'+(i.remarks?'<div class="per">'+i.remarks+'</div>':"")+'</div>').join("");
+  }
+  if(cc.length){b+='<div class="psl">Counselling at this Station ('+cc.length+')</div>';b+=cc.map(c=>'<div class="pe"><div class="ped">'+(c.date||"--")+" - "+(c.month||"--")+'</div><div class="pet c">Staff Counselling</div><div class="peti">'+(c.staffName||"--")+" - "+(c.desig||"")+'</div>'+(c.reason?'<div class="per">Reason: '+c.reason+'</div>':"")+(c.outcome?'<div class="per">Outcome: '+c.outcome+'</div>':"")+'</div>').join("");}
+  document.getElementById("pbody").innerHTML=b;
+  document.getElementById("popup").classList.add("open");
+}
+function closePopup(){document.getElementById("popup").classList.remove("open");SS=null;document.querySelectorAll(".stile").forEach(t=>t.classList.remove("selected"));}
+function onMC(){CM=document.getElementById("msel").value;ACTIVE_TI=null;ACTIVE_COUN=null;ra();}
+function toast(msg,type){const t=document.getElementById("toast");t.textContent=msg;t.className="toast "+type+" show";setTimeout(()=>t.classList.remove("show"),3000);}
+window.addEventListener("load",loadAll);
+</script>
+</body>
+</html>
