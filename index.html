@@ -413,7 +413,14 @@ SECS.forEach(s=>s.stns.forEach(st=>{
 const COLS=["var(--saffron)","var(--amber)","var(--jade)","var(--sapph)","var(--violet)","var(--teal)","var(--rose)","var(--ruby)","var(--saffron)","var(--amber)","var(--jade)","var(--sapph)","var(--violet)"];
 
 let ID=[],IC=[],CO=[],BO=[];
-let CM="all",SS=null;
+// Detect current month in dashboard format e.g. "May-26"
+(function(){
+  const now=new Date();
+  const mNames=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  const yr=String(now.getFullYear()).slice(-2);
+  window._CURR_MONTH=mNames[now.getMonth()]+"-"+yr;
+})();
+let CM=window._CURR_MONTH,SS=null;
 
 async function loadAll(){
   const btn=document.getElementById("sbtn");
@@ -445,7 +452,12 @@ function ld(p,t){document.getElementById("ldf").style.width=p+"%";document.getEl
 async function fg(url){const r=await fetch(url);const t=await r.text();return JSON.parse(t.match(/google\.visualization\.Query\.setResponse\(([\s\S]*?)\);?\s*$/)[1]);}
 function ps(j,f){if(!j||!j.table||!j.table.rows)return[];return j.table.rows.map(row=>{const o={};f.forEach((k,i)=>{const c=row.c&&row.c[i];o[k]=c?(c.f!==undefined&&c.f!==null?c.f:(c.v!==undefined&&c.v!==null?c.v:'')):''});return o;});}
 function mf(a){return CM==="all"?a:a.filter(r=>r.month===CM)}
-function st(s){return mf(ID).filter(i=>i.station===s).length?"green":"yellow";}
+function st(s,tiCode){
+  if(tiCode){
+    return mf(ID).filter(i=>i.station===s&&i.tiCode===tiCode).length?"green":"yellow";
+  }
+  return mf(ID).filter(i=>i.station===s).length?"green":"yellow";
+}
 function ra(){rHero();rMap();rKPI();rCharts();rBonus();rCoun();rTrend();}
 function rHero(){
   const fi=mf(ID),fc2=mf(CO),fb=mf(BO);
@@ -465,7 +477,7 @@ function rMap(){
   let h="";
   SECS.forEach(sec=>{
     let sg=0;
-    sec.stns.forEach(s=>{if(st(s)==="green")sg++;});
+    sec.stns.forEach(s=>{if(st(s,sec.code)==="green")sg++;});
     // For DELHI card, label as "Shared with TI/DLI" to clarify
     const sharedNote=sec.code==="DELHI"?' <span style="font-size:10px;color:#c47a00;font-weight:600">(Shared Section)</span>':'';
     h+='<div class="scard"><div class="sc-hdr"><div><div class="sc-code">TI/'+sec.code+'</div><div class="sc-nm">'+sec.name+' - '+sec.stns.length+' stns'+sharedNote+'</div></div>';
@@ -478,7 +490,7 @@ function rMap(){
     '</div></div>';
     h+='<div class="sc-tiles">';
     sec.stns.forEach(s=>{
-      const x=st(s);
+      const x=st(s,sec.code);
       const sel=SS===s?" selected":"";
       h+='<div class="stile '+x+sel+'" onclick="cStn(\''+s+'\',\''+sec.code+'\')" title="'+s+'"><span class="stile-c">'+s+'</span><span class="stile-d"></span></div>';
     });
@@ -784,7 +796,20 @@ function cStn(stn,tiCodeCtx){
 function closePopup(){document.getElementById("popup").classList.remove("open");SS=null;document.querySelectorAll(".stile").forEach(t=>t.classList.remove("selected"));}
 function onMC(){CM=document.getElementById("msel").value;ACTIVE_TI=null;ACTIVE_COUN=null;ra();}
 function toast(msg,type){const t=document.getElementById("toast");t.textContent=msg;t.className="toast "+type+" show";setTimeout(()=>t.classList.remove("show"),3000);}
-window.addEventListener("load",loadAll);
+window.addEventListener("load",function(){
+  // Set dropdown to current month
+  const sel=document.getElementById("msel");
+  if(sel){
+    // Find option matching current month
+    for(let i=0;i<sel.options.length;i++){
+      if(sel.options[i].value===window._CURR_MONTH){
+        sel.selectedIndex=i;
+        break;
+      }
+    }
+  }
+  loadAll();
+});
 </script>
 </body>
 </html>
