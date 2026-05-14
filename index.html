@@ -156,7 +156,6 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .btr-bf{height:100%;border-radius:3px;transition:width 1s ease}
 .btr-ct{font-family:'Teko',sans-serif;font-size:22px;font-weight:700;width:44px;text-align:right}
 .btr-u{font-size:11px;color:var(--mist)}
-/* Bonus drill-down panel */
 .bon-board{align-items:stretch}
 .bdp{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column;min-height:100%}
 .bdph{padding:14px 18px;background:linear-gradient(135deg,#1a2f5a,#0d1f44);border-bottom:1px solid #dde5f0;display:flex;align-items:center;gap:12px}
@@ -164,13 +163,11 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .bdph-nm{font-size:13px;color:#a0b4cc;margin-top:1px}
 .bdph-pts{font-family:'Teko',sans-serif;font-size:32px;font-weight:700;color:var(--jade);margin-left:auto;line-height:1}
 .bdph-ptsl{font-size:11px;color:#7a9a7a;text-align:right}
-/* Summary tiles inside panel */
 .bdp-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 16px;background:#f8fafc;border-bottom:1px solid #edf0f5}
 .bdp-tile{background:#fff;border:1px solid #dde5f0;border-radius:8px;padding:10px 8px;text-align:center}
 .bdp-tile-n{font-family:'Teko',sans-serif;font-size:28px;font-weight:700;color:var(--saffron);line-height:1}
 .bdp-tile-l{font-size:11px;color:#5a6a88;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 .bdp-tile-pts{font-size:12px;color:var(--jade);font-weight:700;margin-top:1px}
-/* Log inside panel — flex:1 makes it grow to fill remaining space */
 .bdp-scroll{flex:1;overflow-y:auto}
 .bdp-scroll::-webkit-scrollbar{width:3px}
 .bdp-scroll::-webkit-scrollbar-thumb{background:var(--steel)}
@@ -183,7 +180,6 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .bdp-pts{font-family:'Teko',sans-serif;font-size:26px;font-weight:700;color:var(--jade);text-align:center;line-height:1}
 .bdp-ptsl{font-size:10px;color:var(--jade);text-align:center}
 .bdp-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;min-height:200px;color:#a0b0c8;font-size:13px;gap:8px;background:repeating-linear-gradient(135deg,transparent,transparent 20px,rgba(0,0,40,.015) 20px,rgba(0,0,40,.015) 40px)}
-/* Log view header */
 .blg{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05)}
 .blh{padding:14px 16px;background:#f0f4fa;border-bottom:1px solid #dde5f0;display:flex;align-items:center}
 .bls{max-height:400px;overflow-y:auto}
@@ -209,20 +205,17 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
 .ctr-bf{height:100%;border-radius:3px;transition:width 1s ease}
 .ctr-ct{font-family:'Teko',sans-serif;font-size:22px;font-weight:700;width:34px;text-align:right}
 .ctr-u{font-size:11px;color:var(--mist)}
-/* Counselling drill-down panel */
 .cdp{background:#ffffff;border:1px solid #c8d4e4;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.05);display:flex;flex-direction:column;min-height:100%}
 .cdph{padding:14px 18px;background:linear-gradient(135deg,#1a2f5a,#0d1f44);border-bottom:1px solid #dde5f0;display:flex;align-items:center;gap:12px}
 .cdph-ti{font-family:'Teko',sans-serif;font-size:26px;font-weight:700;color:var(--amber);line-height:1}
 .cdph-nm{font-size:13px;color:#a0b4cc;margin-top:1px}
 .cdph-ct{font-family:'Teko',sans-serif;font-size:32px;font-weight:700;color:var(--sapph);margin-left:auto;line-height:1}
 .cdph-ctl{font-size:11px;color:#7a8aaa;text-align:right}
-/* Summary tiles */
 .cdp-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 16px;background:#f8fafc;border-bottom:1px solid #edf0f5}
 .cdp-tile{background:#fff;border:1px solid #dde5f0;border-radius:8px;padding:10px 8px;text-align:center}
 .cdp-tile-n{font-family:'Teko',sans-serif;font-size:28px;font-weight:700;color:var(--sapph);line-height:1}
 .cdp-tile-l{font-size:11px;color:#5a6a88;text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 .cdp-tile-sub{font-size:11px;color:var(--mist);font-weight:600;margin-top:1px}
-/* Scroll log */
 .cdp-scroll{flex:1;overflow-y:auto}
 .cdp-scroll::-webkit-scrollbar{width:3px}
 .cdp-scroll::-webkit-scrollbar-thumb{background:var(--steel)}
@@ -290,7 +283,7 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
   <div class="hs"><div class="hsi">✅</div><div class="hsn g" id="h1">0</div><div class="hsl">Stations Inspected</div><div class="hss" id="h1s">this period</div></div>
   <div class="hs"><div class="hsi">📋</div><div class="hsn b" id="h2">0</div><div class="hsl">Total Inspections</div><div class="hss">all types</div></div>
   <div class="hs"><div class="hsi">🎯</div><div class="hsn a" id="h3">0</div><div class="hsl">Bonus Points</div><div class="hss" id="h3s">across all TIs</div></div>
-  <div class="hs"><div class="hsi">🧑‍💼</div><div class="hsn a" id="h4">0</div><div class="hsl">Staff Counselled</div><div class="hss">all 12 TIs</div></div>
+  <div class="hs"><div class="hsi">🧑‍💼</div><div class="hsn a" id="h4">0</div><div class="hsl">Staff Counselled</div><div class="hss">all 13 TIs</div></div>
   <div class="hs"><div class="hsi">📅</div><div class="hsn" id="h5">0</div><div class="hsl">Active Days</div><div class="hss">with recorded data</div></div>
 </div>
 <div class="page">
@@ -327,7 +320,7 @@ body{font-family:'DM Sans',sans-serif;background:#f0f4fa;color:#1a2540;min-heigh
       <div class="cdp-scroll" id="cdp-scroll"><div class="cdp-empty"><span style="font-size:36px">👈</span><span>Select a TI section from the left to see counselling details</span></div></div>
     </div>
   </div>
-  <div class="sh"><div class="st">Month-wise Points Table</div><div class="ss-sub">Total points earned each month — all 12 TIs — highest total = top rank</div></div>
+  <div class="sh"><div class="st">Month-wise Points Table</div><div class="ss-sub">Total points earned each month — all 13 TIs — highest total = top rank</div></div>
   <div class="tg"><table class="tt" id="trendTbl"></table></div>
 </div>
 <div class="popup" id="popup">
@@ -343,7 +336,6 @@ const SHEET_ID="1AagjNBgNdMQ9e_lMDaX2J3K-3N15JIqg6S3tXwUW-zI";
 const MONTHS=["Apr-26","May-26","Jun-26","Jul-26","Aug-26","Sep-26","Oct-26","Nov-26","Dec-26","Jan-27","Feb-27","Mar-27"];
 const MLBL=["Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar"];
 // ── SIMPLE POINTS SYSTEM ─────────────────────────────────────
-// Every inspection earns fixed points. Highest total = Rank 1.
 const INSP_PTS={
   "Safety Inspection":5,
   "Surprise Inspection":4,
@@ -352,8 +344,6 @@ const INSP_PTS={
   "Night Inspection - Footplate (Goods)":4,
   "Surprise Road Inspection":3
 };
-// Counselling: +2 pts per every 5 staff counselled (floor division)
-// Negative deductions (points):
 const INC_PTS={
   "Derailment":-25,
   "All Right Signal Exchange":-3,
@@ -365,7 +355,6 @@ const INC_PTS={
   "Non-submission Shunting Video":-3,
   "Wrong Nav-Sanraksha Format":-3
 };
-// Bonus activities:
 const BONUS_PTS={
   "Video Counselling Session":3,
   "Correct Nav-Sanraksha Report":3,
@@ -377,20 +366,16 @@ function calcPts(tiCode,month){
   const mfc=month==="all"?IC:IC.filter(r=>r.month===month);
   const mfco=month==="all"?CO:CO.filter(r=>r.month===month);
   const mfbo=month==="all"?BO:BO.filter(r=>r.month===month);
-  // Inspection points
   let inspPts=0;
   mfi.filter(r=>r.tiCode===tiCode).forEach(r=>{
     inspPts+=(INSP_PTS[r.type]||0);
   });
-  // Counselling points (+2 pts per every 5 staff counselled)
   const coun=mfco.filter(r=>r.tiCode===tiCode).length;
   const counPts=Math.floor(coun/5)*2;
-  // Bonus points
   let bonusPts=0;
   mfbo.filter(r=>r.tiCode===tiCode).forEach(r=>{
     bonusPts+=(BONUS_PTS[r.actType]||0);
   });
-  // Negative deductions
   let negPts=0;
   mfc.filter(r=>{const sec=SM[r.station];return sec&&sec.code===tiCode;}).forEach(r=>{
     negPts+=(INC_PTS[r.type]||0);
@@ -399,9 +384,12 @@ function calcPts(tiCode,month){
   return {total,inspPts,counPts,bonusPts,negPts:Math.abs(negPts),coun};
 }
 const INC_ICONS={"All Right Signal Exchange":"Signal","Derailment":"Derail","Wrong Routing":"Route","Wrong Reception":"Recptn","Abnormality (found true)":"Abnrml","Wrong Signal Movement by SM":"WrngSig","Incomplete Documentation by SM":"IncDoc","Non-submission Shunting Video":"ShuntV","Wrong Nav-Sanraksha Format":"NavFmt"};
+
+// ── SECS — 13 TIs (DLI + DELHI added) ────────────────────────
 const SECS=[
   {code:"FDB",name:"Hemaraj",stns:["OKA","TKD","JNC","FDB","FDN","BVH","PYLA","AST","PWL"]},
   {code:"DLI",name:"Ashutosh Thakur",stns:["DLI","GZB","DKZ","SZM","DSA","DSA(A&B)","SBB","ANVT","CYZ","GUH","MUD","MDNR","NO","MUZ"]},
+  {code:"DELHI",name:"Chirag Vats",stns:["DLI","GZB","DKZ","SZM","DSA","DSA(A&B)","SBB","ANVT","CYZ","GUH","MUD","MDNR","NO","MUZ"]},
   {code:"MUT",name:"Sudheer Kanojia",stns:["PRTP","MTC","MUT","PQY","DRLA","SKF","KAT","MSP","JDW","MOZ","BMHR","RNA","DBD","THJ","NGL"]},
   {code:"SMQL",name:"S.K. Dhiman",stns:["KEX","BPM","BTU","KPKI","KQL","SMQL","HID","THBN","NNX","RPMN","MNZ","TPZ"]},
   {code:"NDLS",name:"Ashutosh Jha",stns:["NDLS","HNZM","TKJ","LPNR","DSJ","BRSQ","PTNR","DBSI","ANDI","SSB","NNO","GHE"]},
@@ -413,10 +401,20 @@ const SECS=[
   {code:"PNP",name:"Anoop Kumar",stns:["DWNA","PNP","BBDE","BHMW","BHUL","KURN","MLDE","SFDE","PKDE","NLH","MDLA","GHNA","PPDE"]},
   {code:"DEC",name:"Kailash Babu",stns:["DEE","DEC","PM","BWSN","GGN","GHH","PT","JSKA","PTRD","IHP","KIP","FN","MNAR"]}
 ];
-const SM={};SECS.forEach(s=>s.stns.forEach(st=>SM[st]=s));
-const COLS=["var(--saffron)","var(--amber)","var(--jade)","var(--sapph)","var(--violet)","var(--teal)","var(--rose)","var(--ruby)","var(--saffron)","var(--amber)","var(--jade)","var(--sapph)"];
+
+// ── SM lookup: station → section (primary TI = first match) ──
+// For shared DLI/DELHI stations, popup shows both TIs via inspections data
+const SM={};
+SECS.forEach(s=>s.stns.forEach(st=>{
+  if(!SM[st]) SM[st]=s; // first definition wins for station card popup header
+}));
+
+// 13 colours — one per TI
+const COLS=["var(--saffron)","var(--amber)","var(--jade)","var(--sapph)","var(--violet)","var(--teal)","var(--rose)","var(--ruby)","var(--saffron)","var(--amber)","var(--jade)","var(--sapph)","var(--violet)"];
+
 let ID=[],IC=[],CO=[],BO=[];
 let CM="all",SS=null;
+
 async function loadAll(){
   const btn=document.getElementById("sbtn");
   btn.disabled=true;btn.textContent="Syncing...";
@@ -468,7 +466,9 @@ function rMap(){
   SECS.forEach(sec=>{
     let sg=0;
     sec.stns.forEach(s=>{if(st(s)==="green")sg++;});
-    h+='<div class="scard"><div class="sc-hdr"><div><div class="sc-code">TI/'+sec.code+'</div><div class="sc-nm">'+sec.name+' - '+sec.stns.length+' stns</div></div>';
+    // For DELHI card, label as "Shared with TI/DLI" to clarify
+    const sharedNote=sec.code==="DELHI"?' <span style="font-size:10px;color:#c47a00;font-weight:600">(Shared Section)</span>':'';
+    h+='<div class="scard"><div class="sc-hdr"><div><div class="sc-code">TI/'+sec.code+'</div><div class="sc-nm">'+sec.name+' - '+sec.stns.length+' stns'+sharedNote+'</div></div>';
     var pendingCount=sec.stns.length-sg;
     h+='<div class="sc-meta">'+
       '<span style="font-size:10px;font-weight:700;color:#1a7a34">'+sg+'</span>'+
@@ -480,9 +480,8 @@ function rMap(){
     sec.stns.forEach(s=>{
       const x=st(s);
       const sel=SS===s?" selected":"";
-      h+='<div class="stile '+x+sel+'" onclick="cStn(\''+s+'\')" title="'+s+'"><span class="stile-c">'+s+'</span><span class="stile-d"></span></div>';
+      h+='<div class="stile '+x+sel+'" onclick="cStn(\''+s+'\',\''+sec.code+'\')" title="'+s+'"><span class="stile-c">'+s+'</span><span class="stile-d"></span></div>';
     });
-    // Pad to next multiple of 4 so grid rows are always complete
     const rem=sec.stns.length%4;
     if(rem>0){for(let i=0;i<4-rem;i++)h+='<div class="stile" style="visibility:hidden"></div>';}
     h+='</div></div>';
@@ -502,7 +501,6 @@ function rKPI(){
     };
   }).sort((a,b)=>b.total-a.total);
 
-  // Max total for bar scaling
   const maxPts=Math.max(...scores.map(s=>s.total),1);
 
   document.getElementById("kpiGrid").innerHTML=scores.map((t,i)=>{
@@ -512,13 +510,10 @@ function rKPI(){
     const ptCol=i===0?"#c47a00":i===1?"#5a7a5a":i===2?"#8a4a00":"var(--sapph)";
     const barCol=i<3?["#d4920a","#6b8c6b","#a05a10"][i]:"var(--sapph)";
     const barPct=Math.round(t.total/maxPts*100);
-    // Gold / Silver / Bronze card overlay
     const cardOverlay=i===0?'background:linear-gradient(135deg,rgba(255,200,50,.13),rgba(255,179,0,.05));border-color:rgba(212,160,10,.5);':
                       i===1?'background:linear-gradient(135deg,rgba(200,200,210,.13),rgba(180,180,200,.05));border-color:rgba(160,160,180,.5);':
                       i===2?'background:linear-gradient(135deg,rgba(205,130,60,.13),rgba(180,110,40,.05));border-color:rgba(180,110,40,.45);':'';
-    // Gold/silver/bronze medal label colour
     const medalLblCol=i===0?"#b8860b":i===1?"#708090":i===2?"#8b4513":"#5a6a88";
-    // Equation string: +inspPts +bonusPts +counPts -negPts = total
     const eqStr='<span style="color:#0a6630;font-weight:700">+'+t.inspPts+'</span>'+
       '<span style="color:#888;font-size:11px;margin:0 2px"> + </span>'+
       '<span style="color:#1a7a4a;font-weight:700">+'+t.bonusPts+'</span>'+
@@ -528,31 +523,27 @@ function rKPI(){
       '<span style="color:'+(t.negPts>0?"#aa1428":"#aaa")+';font-weight:700">'+t.negPts+'</span>'+
       '<span style="color:#888;font-size:11px;margin:0 3px"> = </span>'+
       '<span style="color:'+ptCol+';font-weight:700;font-size:15px">'+t.total+' pts</span>';
+    // Badge for shared section
+    const sharedBadge=t.code==="DELHI"?'<span style="font-size:9px;background:rgba(196,122,0,.15);color:#8a5500;border:1px solid rgba(196,122,0,.3);border-radius:8px;padding:1px 6px;margin-left:4px">Shared</span>':'';
     return '<div class="kc '+rc+'" style="'+cardOverlay+'">'+
       '<div class="kc-rn">#'+(i+1)+'</div>'+
-      // Header: section code + name | big points
       '<div class="kc-top">'+
-        '<div><div class="kc-sec">'+medal+' TI/'+t.code+'</div>'+
+        '<div><div class="kc-sec">'+medal+' TI/'+t.code+sharedBadge+'</div>'+
         '<div class="kc-nm">'+t.name+' &nbsp;·&nbsp; '+t.sc+' stations</div></div>'+
         '<div style="text-align:right">'+
           '<div style="font-family:Teko,sans-serif;font-size:42px;font-weight:700;line-height:1;color:'+ptCol+'">'+t.total+'</div>'+
           '<div style="font-size:9px;color:#7a8898;text-transform:uppercase;letter-spacing:1px">points</div>'+
         '</div>'+
       '</div>'+
-      // Rank label
       '<div style="font-size:10px;font-weight:700;color:'+medalLblCol+';margin-bottom:6px;letter-spacing:.5px">'+rankLabel+'</div>'+
-      // Progress bar
       '<div class="kc-bar"><div class="kc-bf" style="width:'+barPct+'%;background:'+barCol+'"></div></div>'+
-      // Equation row — shows how total is built
       '<div style="background:rgba(0,0,0,.04);border-radius:5px;padding:7px 10px;margin:8px 0 6px;font-family:Teko,sans-serif;font-size:14px;text-align:center">'+eqStr+'</div>'+
-      // Labels row
       '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:2px;text-align:center;margin-bottom:8px">'+
         '<div style="font-size:8px;color:#0a6630;text-transform:uppercase;letter-spacing:.5px">Insp</div>'+
         '<div style="font-size:8px;color:#1a7a4a;text-transform:uppercase;letter-spacing:.5px">Bonus</div>'+
         '<div style="font-size:8px;color:#6b3fd4;text-transform:uppercase;letter-spacing:.5px">Counselling</div>'+
         '<div style="font-size:8px;color:'+(t.negPts>0?"#aa1428":"#aaa")+';text-transform:uppercase;letter-spacing:.5px">Deductions</div>'+
       '</div>'+
-      // Sub stats
       '<div style="display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid rgba(0,0,0,.06);padding-top:6px">'+
         '<span style="font-size:9px;color:#5a6a88">📋 '+t.insp+' inspections</span>'+
         '<span style="font-size:9px;color:#aaa">·</span>'+
@@ -599,7 +590,6 @@ function rBonus(){
     '</div>'
   ).join("")||'<div style="text-align:center;padding:20px;color:#8899bb;font-size:13px">No bonus activities yet</div>';
 
-  // If a TI was previously selected, refresh their panel too
   if(ACTIVE_TI){
     const sec=SECS.find(s=>s.code===ACTIVE_TI);
     if(sec) showBonDetail(sec.code,sec.name);
@@ -607,7 +597,6 @@ function rBonus(){
 }
 function showBonDetail(code,name){
   ACTIVE_TI=code;
-  // Highlight active row
   document.querySelectorAll(".btr").forEach(r=>r.classList.remove("active"));
   document.querySelectorAll(".btr").forEach(r=>{if(r.onclick&&r.getAttribute("onclick")&&r.getAttribute("onclick").includes("'"+code+"'"))r.classList.add("active");});
 
@@ -617,7 +606,6 @@ function showBonDetail(code,name){
   document.getElementById("bdph-nm").textContent=name;
   document.getElementById("bdph-pts").textContent=pts;
 
-  // Summary tiles: count per activity type
   const actTypes=[
     {key:"Video Counselling Session",icon:"🎥",short:"Video Coun.",pts:BONUS_PTS["Video Counselling Session"]||0},
     {key:"Correct Nav-Sanraksha Report",icon:"📋",short:"Nav-Sanraksha",pts:BONUS_PTS["Correct Nav-Sanraksha Report"]||0},
@@ -637,7 +625,6 @@ function showBonDetail(code,name){
     '</div>';
   }).join("");
 
-  // Day-wise log
   const sorted=[...data].sort((a,b)=>b.date>a.date?1:-1);
   document.getElementById("bdp-scroll").innerHTML=sorted.length?
     sorted.map(b=>{
@@ -682,10 +669,8 @@ function showCounDetail(code,name){
   document.getElementById("cdph-ti").textContent="TI / "+code;
   document.getElementById("cdph-nm").textContent=name;
   document.getElementById("cdph-ct").textContent=data.length;
-  // Summary tiles: Counselled / Warned / Other + unique designations
   const counselled=data.filter(c=>c.outcome==="Counselled").length;
   const warned=data.filter(c=>c.outcome==="Warned").length;
-  const other=data.length-counselled-warned;
   const desigs=new Set(data.map(c=>c.desig).filter(Boolean));
   const stations=new Set(data.map(c=>c.station).filter(Boolean));
   const tilesEl=document.getElementById("cdp-tiles");
@@ -695,7 +680,6 @@ function showCounDetail(code,name){
     '<div class="cdp-tile"><div style="font-size:22px">🟡</div><div class="cdp-tile-n" style="color:var(--amber)">'+warned+'</div><div class="cdp-tile-l">Warned</div></div>'+
     '<div class="cdp-tile"><div style="font-size:22px">📍</div><div class="cdp-tile-n" style="color:var(--sapph)">'+stations.size+'</div><div class="cdp-tile-l">Stations</div></div>'+
     '<div class="cdp-tile"><div style="font-size:22px">👷</div><div class="cdp-tile-n" style="color:var(--teal)">'+desigs.size+'</div><div class="cdp-tile-l">Designations</div></div>';
-  // Day-wise log
   const sorted=[...data].sort((a,b)=>b.date>a.date?1:-1);
   document.getElementById("cdp-scroll").innerHTML=sorted.length?
     sorted.map(c=>{
@@ -713,7 +697,6 @@ function showCounDetail(code,name){
     :'<div class="cdp-empty"><span style="font-size:32px">🧑‍💼</span><span>No counselling records for TI/'+code+' in this period</span></div>';
 }
 function rTrend(){
-  // Compute all monthly points for colour scaling
   const allPts=[];
   SECS.forEach(sec=>{
     MONTHS.forEach(m=>{allPts.push(calcPts(sec.code,m).total);});
@@ -727,12 +710,10 @@ function rTrend(){
     '<th>TOTAL PTS</th><th>RANK</th>'+
   '</tr></thead><tbody>';
 
-  // Compute annual totals for ranking
   const annuals=SECS.map(sec=>({code:sec.code,name:sec.name,total:calcPts(sec.code,"all").total}));
   annuals.sort((a,b)=>b.total-a.total);
   const rankMap={};annuals.forEach((s,i)=>rankMap[s.code]=i+1);
 
-  // Sort by annual total descending — highest first
   const sortedSecs=[...SECS].sort((a,b)=>calcPts(b.code,"all").total-calcPts(a.code,"all").total);
 
   sortedSecs.forEach((sec,rowIdx)=>{
@@ -740,8 +721,6 @@ function rTrend(){
     const annual=calcPts(sec.code,"all").total;
     const rank=rankMap[sec.code];
     const rankStr=rank===1?"🥇 #1":rank===2?"🥈 #2":rank===3?"🥉 #3":"#"+rank;
-    // Row background for top 3
-    // Row style for top 3
     const rowBg=rank===1?"background:linear-gradient(90deg,rgba(255,200,60,.22),rgba(255,200,60,.04))":
                 rank===2?"background:linear-gradient(90deg,rgba(180,190,200,.22),rgba(180,190,200,.04))":
                 rank===3?"background:linear-gradient(90deg,rgba(200,120,50,.18),rgba(200,120,50,.04))":"";
@@ -751,9 +730,11 @@ function rTrend(){
     const rowStyle='style="'+rowBg+';'+borderL+'"';
     const secColor=rank===1?"#b8860b":rank===2?"#607080":rank===3?"#8b4513":"";
     const medalIcon=rank===1?" 🥇":rank===2?" 🥈":rank===3?" 🥉":"";
+    // Shared badge in trend table
+    const sharedMark=sec.code==="DELHI"?' <span style="font-size:9px;color:#8a5500;font-weight:600">(Shared)</span>':'';
     h+='<tr '+rowStyle+'>'+
       '<td class="tt-ti" style="'+(secColor?"color:"+secColor:"")+'">'+sec.code+medalIcon+'</td>'+
-      '<td class="tt-nm" style="font-weight:'+(rank<=3?"600":"400")+'">'+sec.name+'</td>'+
+      '<td class="tt-nm" style="font-weight:'+(rank<=3?"600":"400")+'">'+sec.name+sharedMark+'</td>'+
       ms.map(pts=>{
         const rel=pts/maxPts;
         const bg=pts===0?"#f5f5f5":rel>=0.7?"rgba(10,122,60,.15)":rel>=0.4?"rgba(196,122,0,.12)":"rgba(200,30,58,.1)";
@@ -768,14 +749,21 @@ function rTrend(){
   });
   document.getElementById("trendTbl").innerHTML=h+"</tbody>";
 }
-function cStn(stn){
+// ── Station popup — now accepts tiCode context for shared stations ──
+function cStn(stn,tiCodeCtx){
   SS=stn;
   document.querySelectorAll(".stile").forEach(t=>t.classList.remove("selected"));
-  document.querySelectorAll(".stile").forEach(t=>{if(t.getAttribute("onclick")==="cStn('"+stn+"')")t.classList.add("selected");});
-  const sec=SM[stn];
+  // Highlight tiles matching this station in the specific card
+  document.querySelectorAll(".stile").forEach(t=>{
+    if(t.getAttribute("onclick")==="cStn('"+stn+"','"+tiCodeCtx+"')")t.classList.add("selected");
+  });
+  const sec=tiCodeCtx?SECS.find(s=>s.code===tiCodeCtx):SM[stn];
   const s=st(stn);
-  const si=[...ID].filter(i=>i.station===stn).sort((a,b)=>b.date>a.date?1:-1);
-  const cc=[...CO].filter(i=>i.station===stn).sort((a,b)=>b.date>a.date?1:-1);
+  // Show inspections by this specific TI at this station
+  const si=[...ID].filter(i=>i.station===stn&&(!tiCodeCtx||i.tiCode===tiCodeCtx)).sort((a,b)=>b.date>a.date?1:-1);
+  // Show all inspections at this station (any TI) as secondary
+  const siAll=[...ID].filter(i=>i.station===stn&&tiCodeCtx&&i.tiCode!==tiCodeCtx).sort((a,b)=>b.date>a.date?1:-1);
+  const cc=[...CO].filter(i=>i.station===stn&&(!tiCodeCtx||i.tiCode===tiCodeCtx)).sort((a,b)=>b.date>a.date?1:-1);
   document.getElementById("pcode").textContent=stn;
   document.getElementById("pti").textContent="TI / "+(sec?sec.code:"--")+" - "+(sec?sec.name:"--");
   document.getElementById("psec").textContent="Delhi Division - "+(sec?sec.stns.length:"--")+" stations in section";
@@ -783,8 +771,12 @@ function cStn(stn){
   const p=pm[s]||pm.grey;
   document.getElementById("pst").innerHTML='<span class="ppill '+p.c+'">'+p.t+'</span>';
   let b="";
-  b+='<div class="psl">Inspections ('+si.length+')</div>';
-  b+=si.length?si.map(i=>'<div class="pe"><div class="ped">'+(i.date||"--")+" - "+(i.month||"--")+'</div><div class="pet i">'+(i.type||"--")+'</div><div class="peti">'+(i.tiName||i.tiCode||"--")+'</div>'+(i.remarks?'<div class="per">'+i.remarks+'</div>':"")+'</div>').join(""):'<div class="pempty">No inspections recorded</div>';
+  b+='<div class="psl">Inspections by TI/'+tiCodeCtx+' ('+si.length+')</div>';
+  b+=si.length?si.map(i=>'<div class="pe"><div class="ped">'+(i.date||"--")+" - "+(i.month||"--")+'</div><div class="pet i">'+(i.type||"--")+'</div><div class="peti">'+(i.tiName||i.tiCode||"--")+'</div>'+(i.remarks?'<div class="per">'+i.remarks+'</div>':"")+'</div>').join(""):'<div class="pempty">No inspections by this TI recorded</div>';
+  if(siAll.length){
+    b+='<div class="psl">Also Inspected by Other TI ('+siAll.length+')</div>';
+    b+=siAll.map(i=>'<div class="pe"><div class="ped">'+(i.date||"--")+" - "+(i.month||"--")+'</div><div class="pet i">'+(i.type||"--")+'</div><div class="peti">'+(i.tiName||i.tiCode||"--")+'</div>'+(i.remarks?'<div class="per">'+i.remarks+'</div>':"")+'</div>').join("");
+  }
   if(cc.length){b+='<div class="psl">Counselling at this Station ('+cc.length+')</div>';b+=cc.map(c=>'<div class="pe"><div class="ped">'+(c.date||"--")+" - "+(c.month||"--")+'</div><div class="pet c">Staff Counselling</div><div class="peti">'+(c.staffName||"--")+" - "+(c.desig||"")+'</div>'+(c.reason?'<div class="per">Reason: '+c.reason+'</div>':"")+(c.outcome?'<div class="per">Outcome: '+c.outcome+'</div>':"")+'</div>').join("");}
   document.getElementById("pbody").innerHTML=b;
   document.getElementById("popup").classList.add("open");
