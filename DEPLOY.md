@@ -274,6 +274,74 @@ to 60 days (orange) pulse — an expanding ring plus a slow breathe on the dot.
   first and the glyph on top, so making only the halo part-transparent keeps the
   text crisp while the track, river or gate behind it stays visible.
 
+### Shahdara Panel A to Panel B
+
+The yard diagram shows a single line between the two panels; the map had the
+two panels 350 m apart on the main line and nothing joining them. `DSA(B)` is
+moved onto the link running down towards Anand Vihar and a single-line section
+now connects the two. Both the position and the curve are read off the yard
+diagram, not surveyed — the connection and the line count are right, the exact
+alignment is indicative.
+
+### IBS · intermediate block signals
+
+Nine fixed yellow squares, from the divisional IBS list plus the GGN–GHH one
+supplied separately: MOY–UMB, GZB–GUH, KIP–RE, ASE–SPZ, SPZ–KRZ, ROK–SMF,
+JHI–BZO, JHL–BRZ, GGN–GHH. Each carries the block section and controlling
+station in its tooltip.
+
+Seven of the nine sit exactly on the rail — the marker is placed at the
+half-way point *by length* along the track polyline between the two stations,
+not at the straight midpoint between two dots. The other two involve UMB and
+RE, which lie outside the division and have no polyline, so they use anchor
+coordinates and fall back to the straight midpoint.
+
+The colour is fixed. An IBS is infrastructure, so it is never recoloured by the
+inspection metrics.
+
+### Layers, and seeing one thing at a time
+
+A **Layers** button opens a panel with a checkbox per layer — automatic block,
+IBS, names, towns, rivers/boundaries, WDFC/RRTS — each with a **Solo** button
+that turns the others off, plus Show all / Hide all. "I only want the automatic
+sections" is one click.
+
+Alongside it, a **track configuration** filter shows single, double, four or
+six line sections on their own.
+
+### Making the map fluid
+
+The map now feels like a map because a real bug was fixed, not because
+something was tuned.
+
+**The pointer-to-map conversion was wrong.** It divided the pointer offset by
+element width for x and element height for y. The SVG has no
+`preserveAspectRatio`, so it letterboxes and the true scale is uniform —
+`min(w/vbW, h/vbH)`. With the aspect ratios differing, one axis moved at the
+wrong rate: the map slid away from the pointer as you dragged, and wheel-zoom
+did not stay under the cursor. Everything now goes through the live CTM.
+Measured after the fix, a 120 x 70 px drag moves the viewBox by exactly the
+expected amount on both axes.
+
+Also:
+
+- **Pinch to zoom**, with every pointer tracked, so a second finger turns a pan
+  into a pinch without letting go, and lifting one finger returns to a pan from
+  wherever the remaining finger is.
+- **Wheel and trackpad** zoom anchored on the cursor, with a gentler factor for
+  the ctrl+wheel gesture browsers synthesise for a trackpad pinch.
+- **Nothing expensive runs mid-gesture.** `applyLod` reads layout and
+  `declutterLabels` measures every label; during a drag or pinch only the
+  viewBox attribute is written, and both run once the gesture settles.
+- **Double click or double tap** zooms in on the spot; arrow keys pan and
+  `+`/`-` zoom, for anyone who cannot use a pointer comfortably.
+- **Type actually grows with zoom.** The old ceilings — 2.15x for a station
+  name, 1.32x for a gate — meant the writing barely changed past about 6x,
+  which defeats the point of zooming. Station names now reach 3x and gate
+  numbers 2.4x: measured, a station name goes from 14 px at 1x to 35 px at 6x,
+  and a gate number from nothing to 25 px, with **no overlapping labels** at
+  any level.
+
 ### Still worth doing
 
 - **Rows 1–6 of SECTION A still show only the six old types.** The totals are

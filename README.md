@@ -22,6 +22,9 @@ GitHub Pages-ready dashboard for Sectional Traffic Inspector performance in Nort
 - Level-crossing gates can be shown in full, restricted to traffic gates, or hidden entirely.
 - Automatic block sections are drawn in electric green beneath the track lines, sliced from the real alignment, so signalling territory and track count read at the same time.
 - Label halos are part-transparent, so a name never blanks the rail, river or gate behind it.
+- Nine IBS locations are marked as fixed yellow squares, placed at the half-way point by length along the track between their two stations.
+- A Layers panel toggles automatic block, IBS, names, towns, geography and reference lines, each with a Solo button; a separate filter shows single, double, four or six line sections on their own.
+- Pan, pinch, wheel and double-tap zoom all work against the live CTM, so the map tracks the pointer exactly; label and gate type grows with zoom instead of staying nearly fixed.
 - A **Last inspected** lookup searches every station and gate by code, number, TI, section or location and returns the exact date and the gap in days. Exact codes rank first.
 - Stations over 60 days and 31-60 days pulse in the recency view — a staggered, slow ring that stops under `prefers-reduced-motion` and never runs in the count or signalling views.
 - The map legend collapses to a single chip. It opens by default only when the map panel is wide enough that the key stays under about a fifth of its width, is bounded by the toolbar so it can never slide underneath, scrolls when the panel is short, and remembers the reader's choice.
