@@ -20,6 +20,10 @@ GitHub Pages-ready dashboard for Sectional Traffic Inspector performance in Nort
 - Bundled state areas, rivers, settlements, graticule, and railway context—no external map tiles.
 - Pan, zoom, full-screen map view, Delhi fly-to, station popups, TI focus, inspection heat layers, and light/dark themes.
 - Level-crossing gates can be shown in full, restricted to traffic gates, or hidden entirely.
+- Automatic block sections are drawn in electric green beneath the track lines, sliced from the real alignment, so signalling territory and track count read at the same time.
+- Label halos are part-transparent, so a name never blanks the rail, river or gate behind it.
+- A **Last inspected** lookup searches every station and gate by code, number, TI, section or location and returns the exact date and the gap in days. Exact codes rank first.
+- Stations over 60 days and 31-60 days pulse in the recency view — a staggered, slow ring that stops under `prefers-reduced-motion` and never runs in the count or signalling views.
 - The map legend collapses to a single chip. It opens by default only when the map panel is wide enough that the key stays under about a fifth of its width, is bounded by the toolbar so it can never slide underneath, scrolls when the panel is short, and remembers the reader's choice.
 - Label placement keeps every on-screen gate labelled at every zoom level with no overlaps: halo widths scale with the viewBox, off-screen labels are skipped, and a clashing label is nudged to one of eleven nearby positions before it is dropped.
 - Operational context: automatic/absolute block display, Yamuna/Hindon/Ghaggar references, and distinct WDFC, RRTS, and HORC overlays. New Prithla Jn is plotted west of the Delhi–Mathura line, with separate WDFC connections to AST and PWL forming the supplied map's Y geometry.

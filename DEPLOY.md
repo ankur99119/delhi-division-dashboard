@@ -214,6 +214,66 @@ collapses to a single **LEGEND / Show** chip, and:
 Also removed: the "*n*% of this total is bonus filings rather than field
 inspection" note on the scorecards, and the calculation behind it.
 
+### Last-inspected lookup
+
+The side panel beside the map is now **Last inspected** and carries a search
+box. Typing anything searches every one of the 160 stations and all 359 gates —
+by station code, gate number, TI code, block section or location — and each
+result shows the exact last-inspection date, the gap in days, and the recency
+colour. Clearing the box returns the longest-gaps-first list.
+
+- An exact code always ranks first. Without that, typing a TI code buried the
+  station of the same name under the hundred-odd units that TI owns.
+- Interlocked gates are included and read "never inspected — interlocked",
+  because "when was this last done" deserves an answer even when the answer is
+  "it never is".
+- The section is on every gate row, since the same LC number exists on more
+  than one section.
+- Only the list re-renders per keystroke; the map is left alone.
+
+### Overdue stations pulse
+
+In the **Days since last inspection** view, stations over 60 days (red) and 31
+to 60 days (orange) pulse — an expanding ring plus a slow breathe on the dot.
+
+- It is a soft 1.9-second cycle, staggered seven ways so the map ripples rather
+  than strobes. A hard flash across a hundred dots at once is unpleasant and,
+  for some readers, genuinely unsafe.
+- It stops completely under `prefers-reduced-motion`, leaving a static halo so
+  the emphasis survives without the movement.
+- It runs only in the recency view. In the inspection-count and signalling
+  views a red dot means something else entirely, so nothing pulses there.
+
+### Track and signalling on the map
+
+- **KZW to KZW(C) now shows as double line.** There was no `TRACK_CAPACITY`
+  entry covering it — the corridor listed the pair but nothing gave it a track
+  count, so it drew as plain rail. The added entry has only the two station
+  coordinates, so the alignment between them is a straight interpolation; the
+  line count is right, the exact curvature is not surveyed.
+- **Parallel tracks are further apart.** The gap went from 2.8 to 4.8, at which
+  point a double line stops reading as one thick stroke. Four- and six-line
+  sections widen with it.
+- **Automatic block sections are drawn in electric green**, taken from the
+  signalling diagram you supplied. 30 sections: every adjacent pair of stations
+  inside automatic territory. The geometry is sliced out of the track polyline
+  that genuinely passes through both stations, so the green follows the real
+  alignment — 29 of 30 do; `NUR–RDDE` falls back to a straight line because no
+  polyline covers both closely, and its tooltip says so.
+  - It is painted **under** the track lines, not over them. Drawn on top it hid
+    the very thing beside it — whether the section is single, double, four or
+    six.
+  - Its width comes from the track count, otherwise a six-line bundle covered
+    it completely.
+  - The green is deliberately unlike the `--good` green of a recently inspected
+    station, and it has its own legend heading.
+  - `ANVT–SBB` is on your diagram but appears in no corridor sequence, so it is
+    named explicitly in the code.
+- **Map labels are glass now.** The halo behind each label was fully opaque and
+  blanked whatever it covered. `paint-order:stroke` already lays the halo down
+  first and the glyph on top, so making only the halo part-transparent keeps the
+  text crisp while the track, river or gate behind it stays visible.
+
 ### Still worth doing
 
 - **Rows 1–6 of SECTION A still show only the six old types.** The totals are
