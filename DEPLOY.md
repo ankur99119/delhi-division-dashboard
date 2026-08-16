@@ -342,6 +342,42 @@ Also:
   and a gate number from nothing to 25 px, with **no overlapping labels** at
   any level.
 
+### Breaks in the drawn double line
+
+The multi-track network had two genuine breaks, where a drawn double line
+stopped and only the faint OSM rail carried on before a double line resumed:
+
+| Break | Length | Joins |
+|---|---:|---|
+| Patel Nagar–Daya Basti link | 0.77 km | Delhi Ring Railway ↔ New Delhi–Katar Singhwala |
+| Daya Basti–Subzi Mandi link | 3.75 km | New Delhi–Katar Singhwala ↔ New Delhi–Mohri |
+
+Both are now drawn as double line, using the real OSM alignment rather than a
+straight line between stations, and both ends are extended onto the routes they
+join so the connection is seamless.
+
+**How they were found.** Not by eye. Every OSM rail point was tested for a drawn
+capacity line within 600 m; the uncovered points were joined into connected
+runs; and a run counts as a break only if it touches **two or more** drawn
+routes — that is what a gap in the middle of a line looks like. Re-run after the
+fix, the count of such runs is zero.
+
+That distinction matters, because two earlier attempts at this over-reported
+badly. Testing whether a station sits near a track polyline flagged 44
+"gaps" — but the polylines are simplified and often pass 3–20 km from a station,
+so most were false. Testing the straight chord between two stations flagged 22 —
+but on a curved section the chord's midpoint is legitimately several km from the
+arc. Both would have had me drawing 20–50 km straight double lines across open
+country next to the real curved alignment, which is worse than the problem.
+
+**What is deliberately left thin.** About 300 km of OSM rail touches no drawn
+route at all, and another few hundred km touches only one — the long runs beyond
+GKG, past TPZ, south of PWL, north of MOY and so on. These are branches, yard
+leads and lines continuing outside the division, not breaks in the division's
+double-line network. Painting them double would state something about the track
+that is not in the source data. If any specific one of them should be double,
+name it and it takes a minute.
+
 ### Still worth doing
 
 - **Rows 1–6 of SECTION A still show only the six old types.** The totals are
