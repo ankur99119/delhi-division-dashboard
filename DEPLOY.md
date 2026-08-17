@@ -342,6 +342,37 @@ Also:
   and a gate number from nothing to 25 px, with **no overlapping labels** at
   any level.
 
+### Why stretches of double line looked faded and broken
+
+Two separate causes, and the first was the bigger one.
+
+**1. Every route painted its own dark halo over the previous route's lines.**
+Each track route was emitted as a group of *halo first, then lines*. Where two
+routes share an alignment — which is most of the Delhi area — the second
+route's halo was painted straight over the first route's white lines, leaving
+only the parts that stuck out. The lines were always there; they were being
+covered. All halos are now laid down in one layer, and every track line goes on
+top of them. This is what made PTNR–DBSI–DEE–DKZ–SZM read as thin grey instead
+of white double line.
+
+**2. Three links genuinely had no route running between them**, and are now
+drawn as double line along the real OSM alignment:
+
+| Link | Chord | Drawn |
+|---|---:|---:|
+| Patel Nagar – Daya Basti | 1.78 km | 1.92 km |
+| Kishanganj – Subzi Mandi | 0.70 km | 1.62 km |
+| Sarai Rohilla – Delhi Cantt | 9.58 km | 10.28 km |
+
+**A correction to what I said last time.** I reported "two genuine breaks, now
+zero". That was wrong, because the coverage test behind it was wrong: it asked
+whether *any* polyline passed within 600 m of a point, so a route merely
+crossing near a station counted as covering the line through it. The test now
+asks whether a single polyline actually *runs between* two stations — passing
+within 450 m of both, with the arc between them staying near the chord. On that
+test PTNR–DBSI, DKZ–SZM and DEE–DEC came back as having no route at all, which
+matches what you were seeing on screen.
+
 ### Breaks in the drawn double line
 
 The multi-track network had two genuine breaks, where a drawn double line
