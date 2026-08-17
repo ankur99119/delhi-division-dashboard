@@ -342,6 +342,31 @@ Also:
   and a gate number from nothing to 25 px, with **no overlapping labels** at
   any level.
 
+### The Delhi-area loops
+
+Two more stretches are now double line, both found by scanning the OSM rail in
+the Delhi window rather than by eye:
+
+- **Daya Basti–Sadar Bazar avoiding line** — 4.3 km, the long loop running north
+  from Daya Basti up to the Andrews Ganj corridor.
+- **Daya Basti west curve** — the short connecting curve immediately west of
+  DBSI, two OSM fragments chained into one route.
+
+The west curve is worth a note: it sat only 110–140 m from an already-drawn
+line, so every distance-based test I had counted it as covered. It is a
+separate alignment, not the same track, and 140 m is far enough apart to read
+as a distinct line on screen but close enough to fool a proximity test. After
+adding both, a rescan of the whole Delhi window finds no uncovered rail chain
+left at all.
+
+### The source-drawing viewer is removed
+
+The **Source drawing** button and its image viewer are gone from the map. The
+two scan JPEGs stay in `assets/` as the provenance record for where the track
+geometry, gate list and signalling came from — nothing in the page loads them
+any more, so they are only needed if you ever want to re-check a detail against
+the original sheet.
+
 ### Why stretches of double line looked faded and broken
 
 Two separate causes, and the first was the bigger one.
